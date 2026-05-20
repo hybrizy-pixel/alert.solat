@@ -1,31 +1,18 @@
-*{
+/* =========================
+GLOBAL
+========================= */
 
+*{
 margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Poppins',sans-serif;
-
 }
 
 body{
 
-min-height:100vh;
-
-padding:20px;
-
-overflow-x:hidden;
-
-color:white;
-
 background-image:
-
-linear-gradient(
-180deg,
-rgba(1,4,9,0.65),
-rgba(1,4,9,0.92)
-),
-
-url("images/mekah.jpg");
+url('mekah.jpg');
 
 background-size:cover;
 
@@ -35,289 +22,154 @@ background-repeat:no-repeat;
 
 background-attachment:fixed;
 
+min-height:100vh;
+
+color:white;
+
+overflow-x:hidden;
+
 }
 
 
-/* ========================= */
-/* CONTAINER */
-/* ========================= */
+/* =========================
+OVERLAY
+========================= */
 
-.container{
+body::before{
 
-max-width:540px;
+content:"";
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+background:
+rgba(0,0,0,0.55);
+
+z-index:-1;
+
+}
+
+
+/* =========================
+APP CONTAINER
+========================= */
+
+.app{
+
+padding:20px;
+
+max-width:500px;
 
 margin:auto;
 
 }
 
 
-/* ========================= */
-/* GLASS EFFECT */
-/* ========================= */
-
-.glass{
-
-background:
-rgba(255,255,255,0.08);
-
-backdrop-filter:
-blur(20px);
-
-border:
-1px solid rgba(255,255,255,0.08);
-
-box-shadow:
-0 10px 40px rgba(0,0,0,0.45);
-
-}
-
-
-/* ========================= */
-/* HEADER */
-/* ========================= */
+/* =========================
+HEADER
+========================= */
 
 .header{
 
-padding:30px;
-
-border-radius:35px;
-
-margin-bottom:20px;
-
 text-align:center;
 
+margin-top:20px;
+
+margin-bottom:30px;
+
 }
 
-.logo{
+.header h1{
 
-font-size:38px;
+font-size:34px;
 
 font-weight:700;
 
-margin-bottom:15px;
+margin-bottom:10px;
 
 text-shadow:
-0 0 25px rgba(255,255,255,0.5);
+0 0 10px rgba(0,0,0,0.5);
 
 }
 
-.current-time{
+#current-time{
 
-font-size:72px;
+font-size:52px;
 
 font-weight:700;
 
-text-shadow:
-
-0 0 15px rgba(255,255,255,0.45),
-
-0 0 40px rgba(59,130,246,0.6);
-
-animation:
-glowClock 2s infinite alternate;
+margin-bottom:10px;
 
 }
 
-@keyframes glowClock {
-
-0%{
-
-text-shadow:
-0 0 15px rgba(255,255,255,0.45);
-
-}
-
-100%{
-
-text-shadow:
-0 0 35px rgba(59,130,246,0.9);
-
-}
-
-}
-
-.date{
-
-margin-top:10px;
-
-opacity:0.9;
+#date,
+#hijri-date,
+#location{
 
 font-size:15px;
 
-}
+opacity:0.9;
 
-.location{
-
-margin-top:10px;
-
-font-size:14px;
-
-color:#cbd5e1;
+margin-top:5px;
 
 }
 
 
-/* ========================= */
-/* BUTTONS */
-/* ========================= */
+/* =========================
+NEXT PRAYER CARD
+========================= */
 
-.button{
-
-width:100%;
-
-padding:17px;
-
-margin-top:16px;
-
-border:none;
-
-border-radius:22px;
-
-font-size:16px;
-
-font-weight:600;
-
-cursor:pointer;
-
-transition:0.3s;
-
-color:white;
-
-}
-
-.button:hover{
-
-transform:translateY(-2px);
-
-}
-
-
-/* ========================= */
-/* NOTIFICATION BUTTON */
-/* ========================= */
-
-.notify-btn{
+.next-prayer-card{
 
 background:
-linear-gradient(
-135deg,
-#2563eb,
-#38bdf8
-);
+rgba(255,255,255,0.1);
 
-box-shadow:
-0 0 25px rgba(56,189,248,0.5);
+backdrop-filter:
+blur(12px);
 
-}
+padding:20px;
 
+border-radius:25px;
 
-/* ========================= */
-/* NOTIFICATION ACTIVE */
-/* ========================= */
-
-.notify-active{
-
-background:
-linear-gradient(
-135deg,
-#16a34a,
-#22c55e
-) !important;
-
-box-shadow:
-0 0 25px rgba(34,197,94,0.6);
-
-}
-
-
-/* ========================= */
-/* TEST BUTTON */
-/* ========================= */
-
-.test-btn{
-
-background:
-linear-gradient(
-135deg,
-#dc2626,
-#ef4444
-);
-
-box-shadow:
-0 0 25px rgba(239,68,68,0.5);
-
-}
-
-
-/* ========================= */
-/* CARD */
-/* ========================= */
-
-.card{
-
-padding:26px;
-
-border-radius:35px;
-
-margin-bottom:20px;
-
-}
-
-.card-title{
-
-font-size:23px;
-
-font-weight:600;
-
-margin-bottom:20px;
-
-}
-
-
-/* ========================= */
-/* NEXT PRAYER */
-/* ========================= */
-
-.next-prayer{
-
-font-size:42px;
-
-font-weight:700;
+margin-bottom:25px;
 
 text-align:center;
 
+border:
+1px solid rgba(255,255,255,0.15);
+
+box-shadow:
+0 8px 30px rgba(0,0,0,0.3);
+
+}
+
+.next-prayer-card h2{
+
+font-size:22px;
+
+margin-bottom:15px;
+
+}
+
+#next-prayer{
+
+font-size:34px;
+
+font-weight:700;
+
 margin-bottom:20px;
 
-color:#facc15;
-
-text-shadow:
-0 0 25px rgba(250,204,21,0.7);
-
-animation:
-pulseText 2s infinite;
-
-}
-
-@keyframes pulseText {
-
-0%{
-transform:scale(1);
-}
-
-50%{
-transform:scale(1.03);
-}
-
-100%{
-transform:scale(1);
-}
-
 }
 
 
-/* ========================= */
-/* COUNTDOWN */
-/* ========================= */
+/* =========================
+COUNTDOWN
+========================= */
 
 .countdown{
 
@@ -331,41 +183,71 @@ gap:15px;
 
 .time-box{
 
-width:95px;
-
-padding:20px;
-
-border-radius:25px;
-
-text-align:center;
-
 background:
-rgba(255,255,255,0.08);
+rgba(255,255,255,0.12);
+
+padding:15px;
+
+border-radius:18px;
+
+width:80px;
 
 }
 
-.time-number{
+.time-box span{
 
-font-size:34px;
+display:block;
+
+font-size:30px;
 
 font-weight:700;
 
 }
 
-.time-label{
+.time-box small{
 
 font-size:13px;
-
-margin-top:5px;
 
 opacity:0.8;
 
 }
 
 
-/* ========================= */
-/* PRAYER ROW */
-/* ========================= */
+/* =========================
+PRAYER TIMES
+========================= */
+
+.prayer-times{
+
+background:
+rgba(255,255,255,0.1);
+
+backdrop-filter:
+blur(12px);
+
+border-radius:25px;
+
+padding:20px;
+
+margin-bottom:25px;
+
+border:
+1px solid rgba(255,255,255,0.15);
+
+box-shadow:
+0 8px 30px rgba(0,0,0,0.3);
+
+}
+
+.prayer-times h2{
+
+text-align:center;
+
+margin-bottom:20px;
+
+font-size:24px;
+
+}
 
 .prayer-row{
 
@@ -375,151 +257,220 @@ justify-content:space-between;
 
 align-items:center;
 
-padding:18px 20px;
+padding:15px 10px;
 
-margin-top:14px;
+border-bottom:
+1px solid rgba(255,255,255,0.1);
 
-border-radius:24px;
-
-background:
-rgba(255,255,255,0.06);
-
-transition:0.3s;
-
-font-size:17px;
+font-size:18px;
 
 }
 
-.prayer-row:hover{
+.prayer-row:last-child{
 
-transform:translateY(-2px);
-
-background:
-rgba(255,255,255,0.1);
+border-bottom:none;
 
 }
 
 
-/* ========================= */
-/* ACTIVE PRAYER */
-/* ========================= */
+/* =========================
+ACTIVE PRAYER
+========================= */
 
 .active-prayer{
 
 background:
-linear-gradient(
-135deg,
-#dc2626,
-#ef4444
-);
+rgba(0,255,170,0.15);
 
-box-shadow:
+border-radius:15px;
 
-0 0 20px rgba(239,68,68,0.7),
+padding-left:10px;
 
-0 0 45px rgba(239,68,68,0.5);
-
-animation:
-activeGlow 1s infinite;
-
-}
-
-@keyframes activeGlow {
-
-0%{
-
-transform:scale(1);
-
-}
-
-50%{
-
-transform:scale(1.02);
-
-}
-
-100%{
-
-transform:scale(1);
-
-}
+padding-right:10px;
 
 }
 
 
-/* ========================= */
-/* EVENT BOX */
-/* ========================= */
+/* =========================
+BUTTONS
+========================= */
 
-.event-box{
+.button-group{
 
-padding:20px;
+display:flex;
 
-border-radius:24px;
+flex-direction:column;
 
-margin-top:15px;
+gap:15px;
 
-background:
-rgba(255,255,255,0.06);
+margin-bottom:25px;
+
+}
+
+button{
+
+border:none;
+
+padding:16px;
+
+border-radius:20px;
 
 font-size:16px;
 
-font-weight:500;
+font-weight:600;
+
+cursor:pointer;
 
 transition:0.3s;
 
 }
 
-.event-box:hover{
-
-transform:translateY(-2px);
+.notify-btn{
 
 background:
-rgba(255,255,255,0.1);
+linear-gradient(
+135deg,
+#00c853,
+#009624
+);
+
+color:white;
+
+}
+
+.notify-active{
+
+background:
+linear-gradient(
+135deg,
+#2962ff,
+#0039cb
+);
+
+}
+
+.test-btn{
+
+background:
+linear-gradient(
+135deg,
+#ff9800,
+#ef6c00
+);
+
+color:white;
+
+}
+
+button:hover{
+
+transform:scale(1.03);
 
 }
 
 
-/* ========================= */
-/* FOOTER */
-/* ========================= */
+/* =========================
+ISLAMIC EVENT
+========================= */
+
+.islamic-events{
+
+background:
+rgba(255,255,255,0.1);
+
+backdrop-filter:
+blur(12px);
+
+border-radius:25px;
+
+padding:20px;
+
+margin-bottom:30px;
+
+border:
+1px solid rgba(255,255,255,0.15);
+
+box-shadow:
+0 8px 30px rgba(0,0,0,0.3);
+
+}
+
+.islamic-events h2{
+
+text-align:center;
+
+margin-bottom:20px;
+
+}
+
+.event-item{
+
+padding:14px;
+
+margin-bottom:12px;
+
+border-radius:15px;
+
+background:
+rgba(255,255,255,0.08);
+
+font-size:16px;
+
+}
+
+
+/* =========================
+FOOTER
+========================= */
 
 .footer{
 
 text-align:center;
 
-margin-top:25px;
-
 font-size:13px;
 
-opacity:0.65;
+opacity:0.7;
+
+padding-bottom:30px;
 
 }
 
 
-/* ========================= */
-/* MOBILE */
-/* ========================= */
+/* =========================
+MOBILE
+========================= */
 
 @media(max-width:600px){
 
-.current-time{
+#current-time{
 
-font-size:58px;
+font-size:42px;
+
+}
+
+#next-prayer{
+
+font-size:28px;
 
 }
 
 .time-box{
 
-width:85px;
+width:70px;
 
-padding:18px;
+padding:12px;
 
 }
 
-.time-number{
+.time-box span{
 
-font-size:28px;
+font-size:24px;
+
+}
+
+.prayer-row{
+
+font-size:16px;
 
 }
 

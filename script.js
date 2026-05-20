@@ -608,12 +608,6 @@ async function testNotification() {
 
 try {
 
-await fetch(
-
-"https://alertsolat.netlify.app/.netlify/functions/sendPrayerAlert?type=test&prayer=Maghrib"
-
-);
-
 playAzan("Maghrib");
 
 alert(
@@ -747,14 +741,6 @@ lastNotification !==
 lastNotification =
 `${prayer.name}-reminder`;
 
-
-await fetch(
-
-`https://alertsolat.netlify.app/.netlify/functions/sendPrayerAlert?type=reminder&prayer=${prayer.name}`
-
-);
-
-
 playAzan(prayer.name);
 
 }
@@ -774,14 +760,6 @@ lastNotification !==
 
 lastNotification =
 `${prayer.name}-azan`;
-
-
-await fetch(
-
-`https://alertsolat.netlify.app/.netlify/functions/sendPrayerAlert?type=azan&prayer=${prayer.name}`
-
-);
-
 
 playAzan(prayer.name);
 

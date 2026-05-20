@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ms">
+
+<html lang="en">
 
 <head>
 
@@ -10,162 +11,248 @@ name="viewport"
 content="width=device-width, initial-scale=1.0"
 />
 
-<title>🕌 Alert Solat</title>
+<title>
+My Solat
+</title>
 
-<meta
-name="theme-color"
-content="#020617"
-/>
+
+<!-- =========================
+PWA
+========================= -->
 
 <link
 rel="manifest"
 href="manifest.json"
 />
 
+<meta
+name="theme-color"
+content="#000000"
+/>
+
+
+<!-- =========================
+ICONS
+========================= -->
+
 <link
 rel="apple-touch-icon"
-href="icons/icon-192.png"
+href="icon-192.png"
 />
+
+
+<!-- =========================
+CSS
+========================= -->
 
 <link
 rel="stylesheet"
 href="style.css"
 />
 
-<!-- ========================= -->
-<!-- GOOGLE FONT -->
-<!-- ========================= -->
+
+<!-- =========================
+GOOGLE FONT
+========================= -->
 
 <link
 href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
 rel="stylesheet"
 />
 
-<!-- ========================= -->
-<!-- ONESIGNAL SDK -->
-<!-- ========================= -->
 
-<script
-src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
-defer>
-</script>
+<!-- =========================
+ONESIGNAL
+========================= -->
 
-<!-- ========================= -->
-<!-- ONESIGNAL INIT -->
-<!-- ========================= -->
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 
 <script>
 
 window.OneSignalDeferred =
 window.OneSignalDeferred || [];
 
-window.OneSignalInstance = null;
-
 OneSignalDeferred.push(
 async function(OneSignal) {
 
 await OneSignal.init({
-  
 
 appId:
 "399a4625-3fc2-47fd-b4a7-5e50c5542f53",
 
-notifyButton:{
+notifyButton: {
 enable:false
 },
 
-allowLocalhostAsSecureOrigin:true,
-autoRegister:false,
-autoResubscribe:false,
+allowLocalhostAsSecureOrigin:true
+
 });
 
-window.OneSignalInstance =
-OneSignal;
+window.OneSignal = OneSignal;
 
 console.log(
 "✅ OneSignal Ready"
 );
 
-});
+}
+);
 
 </script>
 
 </head>
 
+
 <body>
 
-<div class="container">
+<div class="app">
 
-<!-- ========================= -->
-<!-- HEADER -->
-<!-- ========================= -->
 
-<div class="header glass">
+<!-- =========================
+HEADER
+========================= -->
 
-<div class="logo">
+<div class="header">
 
-🕌 Alert Solat
+<h1>
+🕌 My Solat
+</h1>
 
-</div>
-
-<!-- ========================= -->
-<!-- CLOCK -->
-<!-- ========================= -->
-
-<div
-class="current-time"
-id="current-time"
->
-
+<div id="current-time">
 00:00:00
+</div>
+
+<div id="date">
+Loading...
+</div>
+
+<div id="hijri-date">
+Loading...
+</div>
+
+<div id="location">
+Loading...
+</div>
 
 </div>
 
-<!-- ========================= -->
-<!-- DATE -->
-<!-- ========================= -->
 
-<div
-class="date"
-id="date"
->
+<!-- =========================
+NEXT PRAYER
+========================= -->
 
-Loading Date...
+<div class="next-prayer-card">
+
+<h2>
+Waktu Solat Seterusnya
+</h2>
+
+<div id="next-prayer">
+Loading...
+</div>
+
+
+<div class="countdown">
+
+<div class="time-box">
+
+<span id="hours">
+00
+</span>
+
+<small>
+Jam
+</small>
 
 </div>
 
-<!-- ========================= -->
-<!-- HIJRI -->
-<!-- ========================= -->
 
-<div
-class="date"
-id="hijri-date"
->
+<div class="time-box">
 
-Loading Hijri...
+<span id="minutes">
+00
+</span>
 
-</div>
-
-<!-- ========================= -->
-<!-- LOCATION -->
-<!-- ========================= -->
-
-<div
-class="location"
-id="location"
->
-
-📍 Kubang Pasu / Jitra
+<small>
+Minit
+</small>
 
 </div>
 
-<!-- ========================= -->
-<!-- BUTTONS -->
-<!-- ========================= -->
+
+<div class="time-box">
+
+<span id="seconds">
+00
+</span>
+
+<small>
+Saat
+</small>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+PRAYER TIMES
+========================= -->
+
+<div class="prayer-times">
+
+<h2>
+🕋 Waktu Solat
+</h2>
+
+
+<div class="prayer-row">
+<span>Imsak</span>
+<span id="imsak">--:--</span>
+</div>
+
+<div class="prayer-row">
+<span>Subuh</span>
+<span id="fajr">--:--</span>
+</div>
+
+<div class="prayer-row">
+<span>Syuruk</span>
+<span id="syuruk">--:--</span>
+</div>
+
+<div class="prayer-row">
+<span>Zohor</span>
+<span id="dhuhr">--:--</span>
+</div>
+
+<div class="prayer-row">
+<span>Asar</span>
+<span id="asr">--:--</span>
+</div>
+
+<div class="prayer-row">
+<span>Maghrib</span>
+<span id="maghrib">--:--</span>
+</div>
+
+<div class="prayer-row">
+<span>Isyak</span>
+<span id="isha">--:--</span>
+</div>
+
+</div>
+
+
+<!-- =========================
+BUTTONS
+========================= -->
+
+<div class="button-group">
 
 <button
-class="button notify-btn"
+class="notify-btn"
 onclick="enableNotification()"
 >
 
@@ -173,8 +260,9 @@ onclick="enableNotification()"
 
 </button>
 
+
 <button
-class="button test-btn"
+class="test-btn"
 onclick="testNotification()"
 >
 
@@ -184,286 +272,60 @@ onclick="testNotification()"
 
 </div>
 
-<!-- ========================= -->
-<!-- NEXT PRAYER -->
-<!-- ========================= -->
 
-<div class="card glass">
+<!-- =========================
+ISLAMIC EVENT
+========================= -->
 
-<div class="card-title">
+<div class="islamic-events">
 
-⏰ Waktu Solat Seterusnya
-
-</div>
-
-<div
-class="next-prayer"
-id="next-prayer"
->
-
-SUBUH
-
-</div>
-
-<!-- ========================= -->
-<!-- COUNTDOWN -->
-<!-- ========================= -->
+<h2>
+📅 Islamic Event Countdown
+</h2>
 
 <div
-class="countdown"
-id="countdown"
->
-
-<div class="time-box">
-
-<div
-class="time-number"
-id="hours"
->
-
-00
-
-</div>
-
-<div class="time-label">
-
-Jam
-
-</div>
-
-</div>
-
-<div class="time-box">
-
-<div
-class="time-number"
-id="minutes"
->
-
-00
-
-</div>
-
-<div class="time-label">
-
-Minit
-
-</div>
-
-</div>
-
-<div class="time-box">
-
-<div
-class="time-number"
-id="seconds"
->
-
-00
-
-</div>
-
-<div class="time-label">
-
-Saat
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- ========================= -->
-<!-- PRAYER TIMES -->
-<!-- ========================= -->
-
-<div class="card glass">
-
-<div class="card-title">
-
-🕋 Waktu Solat
-
-</div>
-
-<div class="prayer-row">
-
-<span>
-🌙 Imsak
-</span>
-
-<span id="imsak">
---:--
-</span>
-
-</div>
-
-<div class="prayer-row">
-
-<span>
-🌄 Subuh
-</span>
-
-<span id="fajr">
---:--
-</span>
-
-</div>
-
-<div class="prayer-row">
-
-<span>
-🌅 Syuruk
-</span>
-
-<span id="syuruk">
---:--
-</span>
-
-</div>
-
-<div class="prayer-row">
-
-<span>
-☀️ Zohor
-</span>
-
-<span id="dhuhr">
---:--
-</span>
-
-</div>
-
-<div class="prayer-row">
-
-<span>
-🌤️ Asar
-</span>
-
-<span id="asr">
---:--
-</span>
-
-</div>
-
-<div class="prayer-row active-prayer">
-
-<span>
-🌇 Maghrib
-</span>
-
-<span id="maghrib">
---:--
-</span>
-
-</div>
-
-<div class="prayer-row">
-
-<span>
-🌃 Isyak
-</span>
-
-<span id="isha">
---:--
-</span>
-
-</div>
-
-</div>
-
-<!-- ========================= -->
-<!-- ISLAMIC EVENT -->
-<!-- ========================= -->
-
-<div class="card glass">
-
-<div class="card-title">
-
-🌙 Islamic Event Countdown
-
-</div>
-
-<div
-class="event-box"
+class="event-item"
 id="ramadhan-countdown"
 >
-
-🌙 Ramadan • Loading...
-
+Loading...
 </div>
 
 <div
-class="event-box"
+class="event-item"
 id="aidilfitri-countdown"
 >
-
-🎉 Aidilfitri • Loading...
-
+Loading...
 </div>
 
 <div
-class="event-box"
+class="event-item"
 id="aidiladha-countdown"
 >
-
-🐄 Aidiladha • Loading...
-
+Loading...
 </div>
 
 </div>
 
-<!-- ========================= -->
-<!-- FOOTER -->
-<!-- ========================= -->
+
+<!-- =========================
+FOOTER
+========================= -->
 
 <div class="footer">
 
-✨ Powered by OneSignal & e-Solat API
+Powered by My Solat
 
 </div>
 
 </div>
 
-<!-- ========================= -->
-<!-- SERVICE WORKER -->
-<!-- ========================= -->
 
-<script>
-
-if ("serviceWorker" in navigator) {
-
-navigator.serviceWorker.register(
-"/OneSignalSDKWorker.js"
-)
-
-.then(()=>{
-
-console.log(
-"✅ Service Worker Registered"
-);
-
-})
-
-.catch(error=>{
-
-console.log(
-"❌ Service Worker Error",
-error
-);
-
-});
-
-}
-
-</script>
-
-<!-- ========================= -->
-<!-- MAIN SCRIPT -->
-<!-- ========================= -->
+<!-- =========================
+SCRIPT
+========================= -->
 
 <script src="script.js"></script>
 
 </body>
+
 </html>
