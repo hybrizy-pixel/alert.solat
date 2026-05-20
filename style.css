@@ -362,6 +362,19 @@ color:white;
 
 }
 
+.mute-btn{
+
+background:
+linear-gradient(
+135deg,
+#ff1744,
+#d50000
+);
+
+color:white;
+
+}
+
 button:hover{
 
 transform:scale(1.03);
