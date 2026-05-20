@@ -730,12 +730,13 @@ async function enableNotification(){
 
 try{
 
-await Notification.requestPermission();
+await OneSignal.Notifications
+.requestPermission();
 
 notificationEnabled = true;
 
 alert(
-"🔔 Notification Enabled"
+"🔔 OneSignal Enabled"
 );
 
 }
@@ -759,20 +760,14 @@ try{
 
 playAzan("Maghrib");
 
-new Notification(
+await fetch(
 
-"🕌 MY SOLAT",
+"/api/sendPrayerAlert?message=TEST AZAN ALERT"
 
-{
+);
 
-body:
-"TEST AZAN ALERT",
-
-icon:
-"icon-192.png"
-
-}
-
+alert(
+"✅ OneSignal Test Sent"
 );
 
 }
