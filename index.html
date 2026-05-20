@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ms">
+
+<head>
+
+<meta charset="UTF-8" />
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+/>
+
+<title>🕌 Alert Solat</title>
+
+<meta
+name="theme-color"
+content="#020617"
+/>
+
+<link
+rel="manifest"
+href="manifest.json"
+/>
+
+<link
+rel="apple-touch-icon"
+href="icons/icon-192.png"
+/>
+
+<link
+rel="stylesheet"
+href="style.css"
+/>
+
+<!-- ========================= -->
+<!-- GOOGLE FONT -->
+<!-- ========================= -->
+
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet"
+/>
+
+<!-- ========================= -->
+<!-- ONESIGNAL SDK -->
+<!-- ========================= -->
+
+<script
+src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
+defer>
+</script>
+
+<!-- ========================= -->
+<!-- ONESIGNAL INIT -->
+<!-- ========================= -->
+
+<script>
+
+window.OneSignalDeferred =
+window.OneSignalDeferred || [];
+
+window.OneSignalInstance = null;
+
+OneSignalDeferred.push(
+async function(OneSignal) {
+
+await OneSignal.init({
+  
+
+appId:
+"399a4625-3fc2-47fd-b4a7-5e50c5542f53",
+
+notifyButton:{
+enable:false
+},
+
+allowLocalhostAsSecureOrigin:true,
+autoRegister:false,
+autoResubscribe:false,
+});
+
+window.OneSignalInstance =
+OneSignal;
+
+console.log(
+"✅ OneSignal Ready"
+);
+
+});
+
+</script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- ========================= -->
+<!-- HEADER -->
+<!-- ========================= -->
+
+<div class="header glass">
+
+<div class="logo">
+
+🕌 Alert Solat
+
+</div>
+
+<!-- ========================= -->
+<!-- CLOCK -->
+<!-- ========================= -->
+
+<div
+class="current-time"
+id="current-time"
+>
+
+00:00:00
+
+</div>
+
+<!-- ========================= -->
+<!-- DATE -->
+<!-- ========================= -->
+
+<div
+class="date"
+id="date"
+>
+
+Loading Date...
+
+</div>
+
+<!-- ========================= -->
+<!-- HIJRI -->
+<!-- ========================= -->
+
+<div
+class="date"
+id="hijri-date"
+>
+
+Loading Hijri...
+
+</div>
+
+<!-- ========================= -->
+<!-- LOCATION -->
+<!-- ========================= -->
+
+<div
+class="location"
+id="location"
+>
+
+📍 Kubang Pasu / Jitra
+
+</div>
+
+<!-- ========================= -->
+<!-- BUTTONS -->
+<!-- ========================= -->
+
+<button
+class="button notify-btn"
+onclick="enableNotification()"
+>
+
+🔔 Notification ON
+
+</button>
+
+<button
+class="button test-btn"
+onclick="testNotification()"
+>
+
+🚨 Test Alert
+
+</button>
+
+</div>
+
+<!-- ========================= -->
+<!-- NEXT PRAYER -->
+<!-- ========================= -->
+
+<div class="card glass">
+
+<div class="card-title">
+
+⏰ Waktu Solat Seterusnya
+
+</div>
+
+<div
+class="next-prayer"
+id="next-prayer"
+>
+
+SUBUH
+
+</div>
+
+<!-- ========================= -->
+<!-- COUNTDOWN -->
+<!-- ========================= -->
+
+<div
+class="countdown"
+id="countdown"
+>
+
+<div class="time-box">
+
+<div
+class="time-number"
+id="hours"
+>
+
+00
+
+</div>
+
+<div class="time-label">
+
+Jam
+
+</div>
+
+</div>
+
+<div class="time-box">
+
+<div
+class="time-number"
+id="minutes"
+>
+
+00
+
+</div>
+
+<div class="time-label">
+
+Minit
+
+</div>
+
+</div>
+
+<div class="time-box">
+
+<div
+class="time-number"
+id="seconds"
+>
+
+00
+
+</div>
+
+<div class="time-label">
+
+Saat
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- PRAYER TIMES -->
+<!-- ========================= -->
+
+<div class="card glass">
+
+<div class="card-title">
+
+🕋 Waktu Solat
+
+</div>
+
+<div class="prayer-row">
+
+<span>
+🌙 Imsak
+</span>
+
+<span id="imsak">
+--:--
+</span>
+
+</div>
+
+<div class="prayer-row">
+
+<span>
+🌄 Subuh
+</span>
+
+<span id="fajr">
+--:--
+</span>
+
+</div>
+
+<div class="prayer-row">
+
+<span>
+🌅 Syuruk
+</span>
+
+<span id="syuruk">
+--:--
+</span>
+
+</div>
+
+<div class="prayer-row">
+
+<span>
+☀️ Zohor
+</span>
+
+<span id="dhuhr">
+--:--
+</span>
+
+</div>
+
+<div class="prayer-row">
+
+<span>
+🌤️ Asar
+</span>
+
+<span id="asr">
+--:--
+</span>
+
+</div>
+
+<div class="prayer-row active-prayer">
+
+<span>
+🌇 Maghrib
+</span>
+
+<span id="maghrib">
+--:--
+</span>
+
+</div>
+
+<div class="prayer-row">
+
+<span>
+🌃 Isyak
+</span>
+
+<span id="isha">
+--:--
+</span>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- ISLAMIC EVENT -->
+<!-- ========================= -->
+
+<div class="card glass">
+
+<div class="card-title">
+
+🌙 Islamic Event Countdown
+
+</div>
+
+<div
+class="event-box"
+id="ramadhan-countdown"
+>
+
+🌙 Ramadan • Loading...
+
+</div>
+
+<div
+class="event-box"
+id="aidilfitri-countdown"
+>
+
+🎉 Aidilfitri • Loading...
+
+</div>
+
+<div
+class="event-box"
+id="aidiladha-countdown"
+>
+
+🐄 Aidiladha • Loading...
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- FOOTER -->
+<!-- ========================= -->
+
+<div class="footer">
+
+✨ Powered by OneSignal & e-Solat API
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- SERVICE WORKER -->
+<!-- ========================= -->
+
+<script>
+
+if ("serviceWorker" in navigator) {
+
+navigator.serviceWorker.register(
+"/OneSignalSDKWorker.js"
+)
+
+.then(()=>{
+
+console.log(
+"✅ Service Worker Registered"
+);
+
+})
+
+.catch(error=>{
+
+console.log(
+"❌ Service Worker Error",
+error
+);
+
+});
+
+}
+
+</script>
+
+<!-- ========================= -->
+<!-- MAIN SCRIPT -->
+<!-- ========================= -->
+
+<script src="script.js"></script>
+
+</body>
+</html>
