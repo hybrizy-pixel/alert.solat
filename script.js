@@ -14,6 +14,8 @@ let currentAudio = null;
 
 let currentZone = "kdh01";
 
+let lastCity = "";
+
 
 // =========================
 // ZONE MAP
@@ -88,6 +90,14 @@ const zoneMap = {
 
 "batu pahat":"jhr04",
 "muar":"jhr04",
+
+
+// =========================
+// NEGERI SEMBILAN
+// =========================
+
+"seremban":"ngr01",
+"nilai":"ngr01",
 
 
 // =========================
@@ -204,7 +214,7 @@ console.log(error);
 
 
 // =========================
-// GET LOCATION + AUTO ZONE
+// GET LOCATION + AUTO ZONE LIVE
 // =========================
 
 async function getLocation() {
@@ -218,7 +228,11 @@ document.getElementById(
 "📍 Detecting Location...";
 
 
-navigator.geolocation.getCurrentPosition(
+// =========================
+// LIVE TRACKING
+// =========================
+
+navigator.geolocation.watchPosition(
 
 async(position)=>{
 
@@ -273,6 +287,11 @@ document.getElementById(
 
 `📍 ${city}, ${state}`;
 
+console.log(
+"📍 LOCATION:",
+city,
+state
+);
 
 
 // =========================
@@ -282,24 +301,65 @@ document.getElementById(
 const cityLower =
 city.toLowerCase();
 
-if(zoneMap[cityLower]){
 
-currentZone =
-zoneMap[cityLower];
+// =========================
+// AVOID REPEAT
+// =========================
+
+if(cityLower === lastCity){
+
+return;
 
 }
 
+lastCity = cityLower;
+
+
+if(zoneMap[cityLower]){
+
+const newZone =
+zoneMap[cityLower];
+
+
+// =========================
+// UPDATE ONLY IF CHANGED
+// =========================
+
+if(newZone !== currentZone){
+
+currentZone = newZone;
+
 console.log(
-"ZONE:",
+"🕌 NEW ZONE:",
 currentZone
 );
 
 
 // =========================
-// LOAD PRAYER
+// RELOAD PRAYER TIMES
 // =========================
 
 loadPrayerTimes();
+
+
+// =========================
+// NOTIFICATION
+// =========================
+
+if(Notification.permission === "granted"){
+
+new Notification(
+"📍 Zon Dikemaskini",
+{
+body:`Lokasi baru: ${city}`
+}
+);
+
+}
+
+}
+
+}
 
 }
 
@@ -320,7 +380,7 @@ console.log(error);
 {
 enableHighAccuracy:false,
 timeout:5000,
-maximumAge:60000
+maximumAge:600000
 }
 
 );
@@ -782,6 +842,112 @@ console.log(error);
 
 
 // =========================
+// CHECK PRAYER ALERTS
+// =========================
+
+function checkPrayerAlerts(){
+
+if(!prayerTimes.fajr) return;
+
+const now = new Date();
+
+const currentTime =
+`${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+
+const prayers = [
+
+{name:"Subuh",time:prayerTimes.fajr},
+{name:"Zohor",time:prayerTimes.dhuhr},
+{name:"Asar",time:prayerTimes.asr},
+{name:"Maghrib",time:prayerTimes.maghrib},
+{name:"Isyak",time:prayerTimes.isha}
+
+];
+
+prayers.forEach(prayer=>{
+
+const [hour,minute] =
+prayer.time.split(":").map(Number);
+
+
+// =========================
+// 10 MINUTES BEFORE
+// =========================
+
+const before = new Date();
+
+before.setHours(hour);
+before.setMinutes(minute - 10);
+
+const beforeTime =
+`${String(before.getHours()).padStart(2,"0")}:${String(before.getMinutes()).padStart(2,"0")}`;
+
+if(
+currentTime === beforeTime &&
+lastNotification !== `${prayer.name}-before`
+){
+
+lastNotification =
+`${prayer.name}-before`;
+
+
+// =========================
+// PLAY BEEP
+// =========================
+
+const beep =
+new Audio("beep.mp3");
+
+beep.play();
+
+
+// =========================
+// POPUP
+// =========================
+
+alert(
+`🕌 ${prayer.name} Lagi 10 Minit`
+);
+
+}
+
+
+// =========================
+// EXACT PRAYER TIME
+// =========================
+
+if(
+currentTime === prayer.time &&
+lastNotification !== prayer.name
+){
+
+lastNotification =
+prayer.name;
+
+
+// =========================
+// PLAY AZAN
+// =========================
+
+playAzan(prayer.name);
+
+
+// =========================
+// POPUP
+// =========================
+
+alert(
+`🕌 Waktu ${prayer.name} Telah Masuk`
+);
+
+}
+
+});
+
+}
+
+
+// =========================
 // ISLAMIC EVENT COUNTDOWN
 // =========================
 
@@ -928,3 +1094,8 @@ loadPrayerTimes();
 startCountdown();
 
 updateIslamicCountdown();
+
+setInterval(
+checkPrayerAlerts,
+1000
+);
