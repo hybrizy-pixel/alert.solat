@@ -12,6 +12,93 @@ let lastNotification = "";
 
 let currentAudio = null;
 
+let currentZone = "kdh01";
+
+
+// =========================
+// ZONE MAP
+// =========================
+
+const zoneMap = {
+
+
+// =========================
+// KEDAH
+// =========================
+
+"jitra":"kdh01",
+"kubang pasu":"kdh01",
+"alor setar":"kdh01",
+"pokok sena":"kdh01",
+
+"sungai petani":"kdh02",
+"pendang":"kdh02",
+"yan":"kdh02",
+
+"sik":"kdh03",
+"padang terap":"kdh03",
+
+"baling":"kdh04",
+
+"kulim":"kdh05",
+"bandar baharu":"kdh05",
+
+"langkawi":"kdh06",
+
+
+// =========================
+// PENANG
+// =========================
+
+"george town":"png01",
+"penang":"png01",
+"bukit mertajam":"png01",
+"butterworth":"png01",
+
+
+// =========================
+// SELANGOR
+// =========================
+
+"bangi":"sgr01",
+"kajang":"sgr01",
+"shah alam":"sgr01",
+"petaling jaya":"sgr01",
+"gombak":"sgr01",
+"sepang":"sgr01",
+
+"klang":"sgr03",
+"kuala langat":"sgr03",
+
+
+// =========================
+// KL
+// =========================
+
+"kuala lumpur":"wly01",
+"putrajaya":"wly01",
+
+
+// =========================
+// JOHOR
+// =========================
+
+"johor bahru":"jhr02",
+"kulai":"jhr02",
+
+"batu pahat":"jhr04",
+"muar":"jhr04",
+
+
+// =========================
+// PERAK
+// =========================
+
+"ipoh":"prk02",
+"taiping":"prk01"
+
+};
+
 
 // =========================
 // UPDATE CLOCK
@@ -21,7 +108,13 @@ function updateClock() {
 
 const now = new Date();
 
-const time = now.toLocaleTimeString(
+
+// =========================
+// MALAYSIA TIME
+// =========================
+
+const malaysiaTime =
+now.toLocaleTimeString(
 "en-GB",
 {
 hour12:false
@@ -30,8 +123,32 @@ hour12:false
 
 document.getElementById(
 "current-time"
-).innerHTML = time;
+).innerHTML =
+malaysiaTime;
 
+
+// =========================
+// MEKAH TIME
+// =========================
+
+const mekahTime =
+now.toLocaleTimeString(
+"en-GB",
+{
+timeZone:"Asia/Riyadh",
+hour12:false
+}
+);
+
+document.getElementById(
+"mekah-time"
+).innerHTML =
+mekahTime;
+
+
+// =========================
+// DATE
+// =========================
 
 const date = now.toLocaleDateString(
 "ms-MY",
@@ -87,25 +204,123 @@ console.log(error);
 
 
 // =========================
-// GET LOCATION
+// GET LOCATION + AUTO ZONE
 // =========================
 
-function getLocation() {
+async function getLocation() {
 
 if (!navigator.geolocation) return;
-
-navigator.geolocation.getCurrentPosition(
-
-(position)=>{
 
 document.getElementById(
 "location"
 ).innerHTML =
 
-"📍 Kubang Pasu / Jitra";
+"📍 Detecting Location...";
+
+
+navigator.geolocation.getCurrentPosition(
+
+async(position)=>{
+
+const lat =
+position.coords.latitude;
+
+const lon =
+position.coords.longitude;
+
+
+try{
+
+const response =
+await fetch(
+
+`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+
+);
+
+const data =
+await response.json();
+
+
+// =========================
+// CITY
+// =========================
+
+const city =
+
+data.address.city ||
+data.address.town ||
+data.address.village ||
+data.address.county ||
+"Malaysia";
+
+
+// =========================
+// STATE
+// =========================
+
+const state =
+data.address.state || "";
+
+
+// =========================
+// DISPLAY
+// =========================
+
+document.getElementById(
+"location"
+).innerHTML =
+
+`📍 ${city}, ${state}`;
+
+
+
+// =========================
+// AUTO ZONE
+// =========================
+
+const cityLower =
+city.toLowerCase();
+
+if(zoneMap[cityLower]){
+
+currentZone =
+zoneMap[cityLower];
+
+}
+
+console.log(
+"ZONE:",
+currentZone
+);
+
+
+// =========================
+// LOAD PRAYER
+// =========================
 
 loadPrayerTimes();
 
+}
+
+catch(error){
+
+console.log(error);
+
+}
+
+},
+
+(error)=>{
+
+console.log(error);
+
+},
+
+{
+enableHighAccuracy:false,
+timeout:5000,
+maximumAge:60000
 }
 
 );
@@ -124,7 +339,7 @@ try {
 const response =
 await fetch(
 
-"https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=today&zone=kdh01"
+`https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=today&zone=${currentZone}`
 
 );
 
@@ -412,7 +627,7 @@ updateNextPrayer();
 
 
 // =========================
-// HIGHLIGHT ACTIVE PRAYER
+// HIGHLIGHT PRAYER
 // =========================
 
 function highlightPrayer() {
@@ -427,32 +642,23 @@ row.classList.remove(
 
 });
 
-
 if (!nextPrayer) return;
-
 
 const prayerMap = {
 
 Subuh:"fajr",
-
 Zohor:"dhuhr",
-
 Asar:"asr",
-
 Maghrib:"maghrib",
-
 Isyak:"isha"
 
 };
 
-
 const id =
 prayerMap[nextPrayer.name];
 
-
 const element =
 document.getElementById(id);
-
 
 if (element) {
 
@@ -466,112 +672,6 @@ element.parentElement.classList.add(
 
 
 // =========================
-// ENABLE NOTIFICATION
-// =========================
-
-async function enableNotification() {
-
-const isAndroid =
-/Android/i.test(
-navigator.userAgent
-);
-
-try {
-
-if (isAndroid) {
-
-console.log(
-"ANDROID DETECTED"
-);
-
-}
-
-await OneSignal.Notifications
-.requestPermission();
-
-
-const optedIn =
-
-OneSignal
-.User
-.pushSubscription
-.optedIn;
-
-
-// =========================
-// SUCCESS
-// =========================
-
-if (optedIn) {
-
-notificationEnabled = true;
-
-localStorage.setItem(
-"notificationEnabled",
-"true"
-);
-
-document
-.querySelector(".notify-btn")
-.classList.add(
-"notify-active"
-);
-
-document
-.querySelector(".notify-btn")
-.innerHTML =
-
-"✅ Notification Enabled";
-
-}
-
-
-// =========================
-// FAILED
-// =========================
-
-else {
-
-alert(
-"❌ Notification belum dibenarkan."
-);
-
-}
-
-}
-
-catch(error){
-
-console.log(error);
-
-alert(
-"❌ Subscription Error"
-);
-
-}
-
-}
-
-
-// =========================
-// PLAY BEEP
-// =========================
-
-function playBeep(){
-
-const audio =
-new Audio(
-"beep.mp3"
-);
-
-audio.volume = 1.0;
-
-audio.play();
-
-}
-
-
-// =========================
 // PLAY AZAN
 // =========================
 
@@ -580,35 +680,20 @@ function playAzan(prayerName){
 let audioFile =
 "azan.mp3";
 
-
-// =========================
-// SUBUH SPECIAL
-// =========================
-
-if (prayerName === "Subuh") {
+if(prayerName === "Subuh"){
 
 audioFile =
 "azan-subuh.mp3";
 
 }
 
-
-// =========================
-// STOP OLD AUDIO
-// =========================
-
-if (currentAudio) {
+if(currentAudio){
 
 currentAudio.pause();
 
 currentAudio.currentTime = 0;
 
 }
-
-
-// =========================
-// PLAY NEW AUDIO
-// =========================
 
 currentAudio =
 new Audio(audioFile);
@@ -626,7 +711,7 @@ currentAudio.play();
 
 function muteAzan(){
 
-if (currentAudio){
+if(currentAudio){
 
 currentAudio.pause();
 
@@ -638,19 +723,41 @@ currentAudio.currentTime = 0;
 
 
 // =========================
+// ENABLE NOTIFICATION
+// =========================
+
+async function enableNotification(){
+
+try{
+
+await Notification.requestPermission();
+
+notificationEnabled = true;
+
+alert(
+"🔔 Notification Enabled"
+);
+
+}
+
+catch(error){
+
+console.log(error);
+
+}
+
+}
+
+
+// =========================
 // TEST NOTIFICATION
 // =========================
 
-async function testNotification() {
+async function testNotification(){
 
-try {
+try{
 
 playAzan("Maghrib");
-
-
-// =========================
-// SHOW POPUP
-// =========================
 
 new Notification(
 
@@ -680,205 +787,6 @@ console.log(error);
 
 
 // =========================
-// CHECK PRAYER NOTIFICATION
-// =========================
-
-function checkPrayerNotification() {
-
-setInterval(async()=>{
-
-if (!notificationEnabled) return;
-
-if (!prayerTimes.fajr) return;
-
-const now = new Date();
-
-const hour =
-String(now.getHours())
-.padStart(2,"0");
-
-const minute =
-String(now.getMinutes())
-.padStart(2,"0");
-
-
-const currentTime =
-`${hour}:${minute}`;
-
-
-const prayers = [
-
-{
-name:"Subuh",
-time:prayerTimes.fajr
-},
-
-{
-name:"Zohor",
-time:prayerTimes.dhuhr
-},
-
-{
-name:"Asar",
-time:prayerTimes.asr
-},
-
-{
-name:"Maghrib",
-time:prayerTimes.maghrib
-},
-
-{
-name:"Isyak",
-time:prayerTimes.isha
-}
-
-];
-
-
-// =========================
-// LOOP PRAYER
-// =========================
-
-for (const prayer of prayers) {
-
-const [h,m] =
-prayer.time.split(":");
-
-
-const prayerDate =
-new Date();
-
-prayerDate.setHours(h);
-prayerDate.setMinutes(m);
-
-
-// =========================
-// REMINDER TIME
-// =========================
-
-const reminderDate =
-new Date(
-prayerDate.getTime() -
-10 * 60000
-);
-
-
-const reminderHour =
-String(
-reminderDate.getHours()
-).padStart(2,"0");
-
-
-const reminderMinute =
-String(
-reminderDate.getMinutes()
-).padStart(2,"0");
-
-
-const reminderTime =
-`${reminderHour}:${reminderMinute}`;
-
-
-// =========================
-// 10 MIN BEFORE
-// =========================
-
-if (
-
-currentTime === reminderTime &&
-lastNotification !==
-`${prayer.name}-reminder`
-
-) {
-
-lastNotification =
-`${prayer.name}-reminder`;
-
-
-// =========================
-// PLAY BEEP
-// =========================
-
-playBeep();
-
-
-// =========================
-// SHOW POPUP
-// =========================
-
-new Notification(
-
-"🕌 MY SOLAT",
-
-{
-
-body:
-`${prayer.name} in 10 minutes`,
-
-icon:
-"icon-192.png"
-
-}
-
-);
-
-}
-
-
-// =========================
-// AZAN TIME
-// =========================
-
-if (
-
-currentTime === prayer.time &&
-lastNotification !==
-`${prayer.name}-azan`
-
-) {
-
-lastNotification =
-`${prayer.name}-azan`;
-
-
-// =========================
-// PLAY AZAN
-// =========================
-
-playAzan(prayer.name);
-
-
-// =========================
-// SHOW POPUP
-// =========================
-
-new Notification(
-
-"🕌 MY SOLAT",
-
-{
-
-body:
-`Waktu ${prayer.name} telah masuk`,
-
-icon:
-"icon-192.png"
-
-}
-
-);
-
-}
-
-}
-
-},60000);
-
-}
-
-
-// =========================
 // ISLAMIC EVENT COUNTDOWN
 // =========================
 
@@ -897,6 +805,8 @@ await response.json();
 const hijri =
 data.data.hijri;
 
+const currentMonth =
+parseInt(hijri.month.number);
 
 const currentDay =
 parseInt(hijri.day);
@@ -906,7 +816,27 @@ parseInt(hijri.day);
 // RAMADAN
 // =========================
 
-let ramadhanDays = 236;
+let ramadhanDays = 0;
+
+if(currentMonth < 9){
+
+ramadhanDays =
+(9 - currentMonth) * 30 - currentDay;
+
+}
+
+else if(currentMonth === 9){
+
+ramadhanDays = 0;
+
+}
+
+else{
+
+ramadhanDays =
+(12 - currentMonth + 9) * 30 - currentDay;
+
+}
 
 
 // =========================
@@ -921,11 +851,25 @@ ramadhanDays + 30;
 // AIDILADHA
 // =========================
 
-let hajiDays = 10 - currentDay;
+let hajiDays = 0;
 
-if (hajiDays < 0) {
+if(currentMonth < 12){
+
+hajiDays =
+(12 - currentMonth) * 30 - currentDay + 10;
+
+}
+
+else{
+
+hajiDays =
+10 - currentDay;
+
+if(hajiDays < 0){
 
 hajiDays = 0;
+
+}
 
 }
 
@@ -984,8 +928,8 @@ loadHijriDate();
 
 getLocation();
 
-startCountdown();
+loadPrayerTimes();
 
-checkPrayerNotification();
+startCountdown();
 
 updateIslamicCountdown();

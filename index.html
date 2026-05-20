@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 
 <meta
 name="viewport"
@@ -42,6 +42,16 @@ href="icon-192.png"
 
 
 <!-- =========================
+GOOGLE FONT
+========================= -->
+
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;800;900&display=swap"
+rel="stylesheet"
+/>
+
+
+<!-- =========================
 CSS
 ========================= -->
 
@@ -52,20 +62,13 @@ href="style.css"
 
 
 <!-- =========================
-GOOGLE FONT
-========================= -->
-
-<link
-href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-rel="stylesheet"
-/>
-
-
-<!-- =========================
 ONESIGNAL
 ========================= -->
 
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script
+src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
+defer
+></script>
 
 <script>
 
@@ -73,14 +76,14 @@ window.OneSignalDeferred =
 window.OneSignalDeferred || [];
 
 OneSignalDeferred.push(
-async function(OneSignal) {
+async function(OneSignal){
 
 await OneSignal.init({
 
 appId:
 "399a4625-3fc2-47fd-b4a7-5e50c5542f53",
 
-notifyButton: {
+notifyButton:{
 enable:false
 },
 
@@ -117,9 +120,40 @@ HEADER
 🕌 MY SOLAT
 </h1>
 
+
+<!-- =========================
+DUAL CLOCK
+========================= -->
+
+<div class="dual-clock">
+
+<div class="clock-box malaysia-clock">
+
+<div class="clock-label">
+🇲🇾 MALAYSIA
+</div>
+
 <div id="current-time">
 00:00:00
 </div>
+
+</div>
+
+
+<div class="clock-box mekah-clock">
+
+<div class="clock-label">
+🇸🇦 MEKAH
+</div>
+
+<div id="mekah-time">
+00:00:00
+</div>
+
+</div>
+
+</div>
+
 
 <div id="date">
 Loading...
@@ -143,11 +177,11 @@ NEXT PRAYER
 <div class="next-prayer-card">
 
 <h2>
-Waktu Solat Seterusnya
+WAKTU SOLAT SETERUSNYA
 </h2>
 
 <div id="next-prayer">
-Loading...
+LOADING...
 </div>
 
 
@@ -160,7 +194,7 @@ Loading...
 </span>
 
 <small>
-Jam
+JAM
 </small>
 
 </div>
@@ -173,7 +207,7 @@ Jam
 </span>
 
 <small>
-Minit
+MINIT
 </small>
 
 </div>
@@ -186,7 +220,7 @@ Minit
 </span>
 
 <small>
-Saat
+SAAT
 </small>
 
 </div>
@@ -203,42 +237,42 @@ PRAYER TIMES
 <div class="prayer-times">
 
 <h2>
-🕋 Waktu Solat
+🕋 WAKTU SOLAT
 </h2>
 
 
 <div class="prayer-row">
-<span>Imsak</span>
+<span>IMSAK</span>
 <span id="imsak">--:--</span>
 </div>
 
 <div class="prayer-row">
-<span>Subuh</span>
+<span>SUBUH</span>
 <span id="fajr">--:--</span>
 </div>
 
 <div class="prayer-row">
-<span>Syuruk</span>
+<span>SYURUK</span>
 <span id="syuruk">--:--</span>
 </div>
 
 <div class="prayer-row">
-<span>Zohor</span>
+<span>ZOHOR</span>
 <span id="dhuhr">--:--</span>
 </div>
 
 <div class="prayer-row">
-<span>Asar</span>
+<span>ASAR</span>
 <span id="asr">--:--</span>
 </div>
 
 <div class="prayer-row">
-<span>Maghrib</span>
+<span>MAGHRIB</span>
 <span id="maghrib">--:--</span>
 </div>
 
 <div class="prayer-row">
-<span>Isyak</span>
+<span>ISYAK</span>
 <span id="isha">--:--</span>
 </div>
 
@@ -257,7 +291,7 @@ class="notify-btn"
 onclick="enableNotification()"
 >
 
-🔔 Notification ON
+🔔 NOTIFICATION ON
 
 </button>
 
@@ -267,7 +301,7 @@ class="test-btn"
 onclick="testNotification()"
 >
 
-🚨 Test Alert
+🚨 TEST ALERT
 
 </button>
 
@@ -277,7 +311,7 @@ class="mute-btn"
 onclick="muteAzan()"
 >
 
-🔇 Mute Azan
+🔇 MUTE AZAN
 
 </button>
 
@@ -291,7 +325,7 @@ ISLAMIC EVENT
 <div class="islamic-events">
 
 <h2>
-📅 Islamic Event Countdown
+📅 ISLAMIC EVENT COUNTDOWN
 </h2>
 
 <div
@@ -324,7 +358,7 @@ FOOTER
 
 <div class="footer">
 
-Powered by MY SOLAT
+🇵🇸 FREE PALESTINE • MY SOLAT
 
 </div>
 

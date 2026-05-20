@@ -56,7 +56,7 @@ z-index:-1;
 
 
 /* =========================
-APP CONTAINER
+APP
 ========================= */
 
 .app{
@@ -86,26 +86,131 @@ margin-bottom:30px;
 
 .header h1{
 
-font-size:34px;
+font-size:36px;
 
 font-weight:700;
 
 margin-bottom:10px;
+
+letter-spacing:3px;
 
 text-shadow:
-0 0 10px rgba(0,0,0,0.5);
+0 0 10px #000000,
+0 0 20px #ff9800;
 
 }
 
-#current-time{
 
-font-size:52px;
+/* =========================
+DUAL CLOCK
+========================= */
+
+.dual-clock{
+
+display:flex;
+
+justify-content:center;
+
+gap:20px;
+
+flex-wrap:wrap;
+
+margin-top:20px;
+
+}
+
+.clock-box{
+
+background:
+rgba(255,255,255,0.08);
+
+padding:12px;
+
+border-radius:18px;
+
+min-width:145px;
+
+backdrop-filter:
+blur(10px);
+
+box-shadow:
+0 0 20px rgba(255,152,0,0.2);
+
+}
+
+.clock-label{
+
+font-size:14px;
 
 font-weight:700;
 
+letter-spacing:2px;
+
 margin-bottom:10px;
 
+color:#ffffff;
+
+text-shadow:
+0 0 10px #ff9800;
+
 }
+
+
+/* =========================
+PALESTINE CLOCK
+========================= */
+
+.malaysia-clock #current-time{
+
+font-family:'Orbitron',sans-serif;
+
+font-size:24px;
+
+font-weight:900;
+
+letter-spacing:2px;
+
+color:#00ff66;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #00ff66,
+0 0 20px #00ff66,
+0 0 40px #00ff66;
+
+animation:
+greenGlow 1.5s infinite;
+
+}
+
+
+/* =========================
+MEKAH CLOCK
+========================= */
+
+.mekah-clock #mekah-time{
+
+font-family:'Orbitron',sans-serif;
+
+font-size:24px;
+
+font-weight:900;
+
+letter-spacing:2px;
+
+color:#ff9800;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff9800,
+0 0 20px #ff6d00,
+0 0 40px #ff6d00;
+
+animation:
+orangeGlow 1.5s infinite;
+
+}
+
 
 #date,
 #hijri-date,
@@ -113,7 +218,7 @@ margin-bottom:10px;
 
 font-size:15px;
 
-opacity:0.9;
+opacity:0.95;
 
 margin-top:5px;
 
@@ -121,10 +226,12 @@ margin-top:5px;
 
 
 /* =========================
-NEXT PRAYER CARD
+CARD
 ========================= */
 
-.next-prayer-card{
+.next-prayer-card,
+.prayer-times,
+.islamic-events{
 
 background:
 rgba(255,255,255,0.1);
@@ -138,31 +245,67 @@ border-radius:25px;
 
 margin-bottom:25px;
 
-text-align:center;
-
 border:
 1px solid rgba(255,255,255,0.15);
 
 box-shadow:
-0 8px 30px rgba(0,0,0,0.3);
+0 8px 30px rgba(0,0,0,0.35);
 
 }
 
-.next-prayer-card h2{
 
-font-size:22px;
+/* =========================
+HEADINGS
+========================= */
 
-margin-bottom:15px;
+.next-prayer-card h2,
+.prayer-times h2,
+.islamic-events h2{
+
+text-align:center;
+
+font-size:24px;
+
+margin-bottom:20px;
+
+letter-spacing:2px;
+
+text-transform:uppercase;
 
 }
+
+
+/* =========================
+NEXT PRAYER
+========================= */
 
 #next-prayer{
 
-font-size:34px;
+font-family:'Orbitron',sans-serif;
 
-font-weight:700;
+font-size:38px;
+
+font-weight:900;
 
 margin-bottom:20px;
+
+text-transform:uppercase;
+
+letter-spacing:5px;
+
+color:#ff1744;
+
+text-align:center;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff1744,
+0 0 20px #ff1744,
+0 0 40px #ff0000,
+0 0 80px #ff0000;
+
+animation:
+redBlink 1s infinite;
 
 }
 
@@ -188,9 +331,14 @@ rgba(255,255,255,0.12);
 
 padding:15px;
 
-border-radius:18px;
+border-radius:20px;
 
 width:80px;
+
+text-align:center;
+
+box-shadow:
+0 0 15px rgba(255,152,0,0.2);
 
 }
 
@@ -202,52 +350,31 @@ font-size:30px;
 
 font-weight:700;
 
+color:#ff9800;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff9800,
+0 0 20px #ff6d00,
+0 0 30px #ff6d00;
+
+animation:
+orangeGlow 2s infinite;
+
 }
 
 .time-box small{
 
-font-size:13px;
+font-size:12px;
 
-opacity:0.8;
+letter-spacing:1px;
 
 }
 
 
 /* =========================
-PRAYER TIMES
+PRAYER ROW
 ========================= */
-
-.prayer-times{
-
-background:
-rgba(255,255,255,0.1);
-
-backdrop-filter:
-blur(12px);
-
-border-radius:25px;
-
-padding:20px;
-
-margin-bottom:25px;
-
-border:
-1px solid rgba(255,255,255,0.15);
-
-box-shadow:
-0 8px 30px rgba(0,0,0,0.3);
-
-}
-
-.prayer-times h2{
-
-text-align:center;
-
-margin-bottom:20px;
-
-font-size:24px;
-
-}
 
 .prayer-row{
 
@@ -264,11 +391,33 @@ border-bottom:
 
 font-size:18px;
 
+transition:0.3s;
+
 }
 
 .prayer-row:last-child{
 
 border-bottom:none;
+
+}
+
+
+/* =========================
+DEFAULT TIME GLOW
+========================= */
+
+.prayer-row span:last-child{
+
+font-weight:700;
+
+color:#ff9800;
+
+transition:0.3s;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff9800,
+0 0 20px #ff6d00;
 
 }
 
@@ -280,7 +429,7 @@ ACTIVE PRAYER
 .active-prayer{
 
 background:
-rgba(0,255,170,0.15);
+rgba(255,0,0,0.12);
 
 border-radius:15px;
 
@@ -288,11 +437,39 @@ padding-left:10px;
 
 padding-right:10px;
 
+box-shadow:
+0 0 15px rgba(255,0,0,0.4),
+0 0 30px rgba(255,0,0,0.6);
+
+animation:
+redBlink 1s infinite;
+
 }
 
 
 /* =========================
-BUTTONS
+ACTIVE TIME RED GLOW
+========================= */
+
+.active-prayer span:last-child{
+
+color:#ff1744;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff1744,
+0 0 20px #ff1744,
+0 0 40px #ff0000,
+0 0 60px #ff0000;
+
+animation:
+redBlink 1s infinite;
+
+}
+
+
+/* =========================
+BUTTON GROUP
 ========================= */
 
 .button-group{
@@ -317,13 +494,28 @@ border-radius:20px;
 
 font-size:16px;
 
-font-weight:600;
+font-weight:700;
 
 cursor:pointer;
 
 transition:0.3s;
 
+color:white;
+
+letter-spacing:1px;
+
 }
+
+button:hover{
+
+transform:scale(1.03);
+
+}
+
+
+/* =========================
+BUTTON COLORS
+========================= */
 
 .notify-btn{
 
@@ -332,19 +524,6 @@ linear-gradient(
 135deg,
 #00c853,
 #009624
-);
-
-color:white;
-
-}
-
-.notify-active{
-
-background:
-linear-gradient(
-135deg,
-#2962ff,
-#0039cb
 );
 
 }
@@ -358,8 +537,6 @@ linear-gradient(
 #ef6c00
 );
 
-color:white;
-
 }
 
 .mute-btn{
@@ -371,50 +548,12 @@ linear-gradient(
 #d50000
 );
 
-color:white;
-
-}
-
-button:hover{
-
-transform:scale(1.03);
-
 }
 
 
 /* =========================
-ISLAMIC EVENT
+EVENT ITEM
 ========================= */
-
-.islamic-events{
-
-background:
-rgba(255,255,255,0.1);
-
-backdrop-filter:
-blur(12px);
-
-border-radius:25px;
-
-padding:20px;
-
-margin-bottom:30px;
-
-border:
-1px solid rgba(255,255,255,0.15);
-
-box-shadow:
-0 8px 30px rgba(0,0,0,0.3);
-
-}
-
-.islamic-events h2{
-
-text-align:center;
-
-margin-bottom:20px;
-
-}
 
 .event-item{
 
@@ -429,6 +568,9 @@ rgba(255,255,255,0.08);
 
 font-size:16px;
 
+box-shadow:
+0 0 10px rgba(255,152,0,0.15);
+
 }
 
 
@@ -442,9 +584,127 @@ text-align:center;
 
 font-size:13px;
 
-opacity:0.7;
+opacity:0.8;
 
 padding-bottom:30px;
+
+letter-spacing:2px;
+
+}
+
+
+/* =========================
+GREEN GLOW
+========================= */
+
+@keyframes greenGlow{
+
+0%{
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #00ff66,
+0 0 20px #00ff66;
+
+}
+
+50%{
+
+text-shadow:
+0 0 10px #000000,
+0 0 20px #00ff66,
+0 0 40px #00ff66;
+
+}
+
+100%{
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #00ff66,
+0 0 20px #00ff66;
+
+}
+
+}
+
+
+/* =========================
+ORANGE GLOW
+========================= */
+
+@keyframes orangeGlow{
+
+0%{
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff9800,
+0 0 20px #ff6d00;
+
+}
+
+50%{
+
+text-shadow:
+0 0 10px #000000,
+0 0 20px #ff9800,
+0 0 40px #ff6d00;
+
+}
+
+100%{
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff9800,
+0 0 20px #ff6d00;
+
+}
+
+}
+
+
+/* =========================
+RED BLINK
+========================= */
+
+@keyframes redBlink{
+
+0%{
+
+opacity:1;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff1744,
+0 0 20px #ff1744,
+0 0 40px #ff0000;
+
+}
+
+50%{
+
+opacity:0.4;
+
+text-shadow:
+0 0 2px #000000,
+0 0 5px #ff1744,
+0 0 10px #ff0000;
+
+}
+
+100%{
+
+opacity:1;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff1744,
+0 0 20px #ff1744,
+0 0 40px #ff0000;
+
+}
 
 }
 
@@ -454,12 +714,6 @@ MOBILE
 ========================= */
 
 @media(max-width:600px){
-
-#current-time{
-
-font-size:42px;
-
-}
 
 #next-prayer{
 
@@ -484,6 +738,27 @@ font-size:24px;
 .prayer-row{
 
 font-size:16px;
+
+}
+
+button{
+
+font-size:14px;
+
+padding:14px;
+
+}
+
+.clock-box{
+
+min-width:130px;
+
+}
+
+.malaysia-clock #current-time,
+.mekah-clock #mekah-time{
+
+font-size:20px;
 
 }
 
