@@ -214,7 +214,7 @@ console.log(error);
 
 
 // =========================
-// GET LOCATION + AUTO ZONE LIVE
+// GET LOCATION + AUTO ZONE
 // =========================
 
 async function getLocation() {
@@ -227,10 +227,6 @@ document.getElementById(
 
 "📍 Detecting Location...";
 
-
-// =========================
-// LIVE TRACKING
-// =========================
 
 navigator.geolocation.watchPosition(
 
@@ -255,11 +251,6 @@ await fetch(
 const data =
 await response.json();
 
-
-// =========================
-// CITY
-// =========================
-
 const city =
 
 data.address.city ||
@@ -268,18 +259,9 @@ data.address.village ||
 data.address.county ||
 "Malaysia";
 
-
-// =========================
-// STATE
-// =========================
-
 const state =
 data.address.state || "";
 
-
-// =========================
-// DISPLAY
-// =========================
 
 document.getElementById(
 "location"
@@ -287,23 +269,13 @@ document.getElementById(
 
 `📍 ${city}, ${state}`;
 
-console.log(
-"📍 LOCATION:",
-city,
-state
-);
-
-
-// =========================
-// AUTO ZONE
-// =========================
 
 const cityLower =
 city.toLowerCase();
 
 
 // =========================
-// AVOID REPEAT
+// AVOID RELOAD
 // =========================
 
 if(cityLower === lastCity){
@@ -315,15 +287,14 @@ return;
 lastCity = cityLower;
 
 
+// =========================
+// AUTO ZONE
+// =========================
+
 if(zoneMap[cityLower]){
 
 const newZone =
 zoneMap[cityLower];
-
-
-// =========================
-// UPDATE ONLY IF CHANGED
-// =========================
 
 if(newZone !== currentZone){
 
@@ -334,28 +305,7 @@ console.log(
 currentZone
 );
 
-
-// =========================
-// RELOAD PRAYER TIMES
-// =========================
-
 loadPrayerTimes();
-
-
-// =========================
-// NOTIFICATION
-// =========================
-
-if(Notification.permission === "granted"){
-
-new Notification(
-"📍 Zon Dikemaskini",
-{
-body:`Lokasi baru: ${city}`
-}
-);
-
-}
 
 }
 
@@ -440,45 +390,26 @@ prayer.isha.substring(0,5)
 // UPDATE UI
 // =========================
 
-document.getElementById(
-"imsak"
-).innerHTML =
+document.getElementById("imsak").innerHTML =
 prayerTimes.imsak;
 
-document.getElementById(
-"fajr"
-).innerHTML =
+document.getElementById("fajr").innerHTML =
 prayerTimes.fajr;
 
-document.getElementById(
-"syuruk"
-).innerHTML =
+document.getElementById("syuruk").innerHTML =
 prayerTimes.syuruk;
 
-document.getElementById(
-"dhuhr"
-).innerHTML =
+document.getElementById("dhuhr").innerHTML =
 prayerTimes.dhuhr;
 
-document.getElementById(
-"asr"
-).innerHTML =
+document.getElementById("asr").innerHTML =
 prayerTimes.asr;
 
-document.getElementById(
-"maghrib"
-).innerHTML =
+document.getElementById("maghrib").innerHTML =
 prayerTimes.maghrib;
 
-document.getElementById(
-"isha"
-).innerHTML =
+document.getElementById("isha").innerHTML =
 prayerTimes.isha;
-
-
-// =========================
-// UPDATE NEXT PRAYER
-// =========================
 
 updateNextPrayer();
 
@@ -507,7 +438,6 @@ const currentMinutes =
 
 now.getHours() * 60 +
 now.getMinutes();
-
 
 const prayers = [
 
@@ -538,7 +468,6 @@ time:prayerTimes.isha
 
 ];
 
-
 nextPrayer = null;
 
 
@@ -553,7 +482,6 @@ prayer.time.split(":").map(Number);
 
 const prayerMinutes =
 hour * 60 + minute;
-
 
 if (prayerMinutes > currentMinutes) {
 
@@ -592,11 +520,6 @@ document.getElementById(
 ).innerHTML =
 nextPrayer.name;
 
-
-// =========================
-// HIGHLIGHT
-// =========================
-
 highlightPrayer();
 
 }
@@ -623,11 +546,6 @@ target.setHours(hour);
 target.setMinutes(minute);
 target.setSeconds(0);
 
-
-// =========================
-// NEXT DAY
-// =========================
-
 if (target <= now) {
 
 target.setDate(
@@ -636,10 +554,8 @@ target.getDate() + 1
 
 }
 
-
 const diff =
 target - now;
-
 
 const hours =
 Math.floor(diff / 1000 / 60 / 60);
@@ -659,25 +575,14 @@ Math.floor(
 // UPDATE UI
 // =========================
 
-document.getElementById(
-"hours"
-).innerHTML =
+document.getElementById("hours").innerHTML =
 String(hours).padStart(2,"0");
 
-document.getElementById(
-"minutes"
-).innerHTML =
+document.getElementById("minutes").innerHTML =
 String(minutes).padStart(2,"0");
 
-document.getElementById(
-"seconds"
-).innerHTML =
+document.getElementById("seconds").innerHTML =
 String(seconds).padStart(2,"0");
-
-
-// =========================
-// REFRESH NEXT PRAYER
-// =========================
 
 updateNextPrayer();
 
@@ -760,7 +665,7 @@ new Audio(audioFile);
 
 currentAudio.volume = 1.0;
 
-currentAudio.play();
+currentAudio.play().catch(()=>{});
 
 }
 
@@ -785,8 +690,6 @@ currentAudio.currentTime = 0;
 // =========================
 // ENABLE NOTIFICATION
 // =========================
-
-async function enableNotification(){
 
 async function enableNotification(){
 
@@ -881,7 +784,7 @@ prayer.time.split(":").map(Number);
 
 
 // =========================
-// 10 MINUTES BEFORE
+// 10 MIN BEFORE
 // =========================
 
 const before = new Date();
@@ -900,20 +803,10 @@ lastNotification !== `${prayer.name}-before`
 lastNotification =
 `${prayer.name}-before`;
 
-
-// =========================
-// PLAY BEEP
-// =========================
-
 const beep =
 new Audio("beep.mp3");
 
-beep.play();
-
-
-// =========================
-// POPUP
-// =========================
+beep.play().catch(()=>{});
 
 alert(
 `🕌 ${prayer.name} Lagi 10 Minit`
@@ -934,17 +827,7 @@ lastNotification !== prayer.name
 lastNotification =
 prayer.name;
 
-
-// =========================
-// PLAY AZAN
-// =========================
-
 playAzan(prayer.name);
-
-
-// =========================
-// POPUP
-// =========================
 
 alert(
 `🕌 Waktu ${prayer.name} Telah Masuk`
@@ -982,11 +865,6 @@ parseInt(hijri.month.number);
 const currentDay =
 parseInt(hijri.day);
 
-
-// =========================
-// RAMADAN
-// =========================
-
 let ramadhanDays = 0;
 
 if(currentMonth < 9){
@@ -1009,18 +887,8 @@ ramadhanDays =
 
 }
 
-
-// =========================
-// AIDILFITRI
-// =========================
-
 let rayaDays =
 ramadhanDays + 30;
-
-
-// =========================
-// AIDILADHA
-// =========================
 
 let hajiDays = 0;
 
@@ -1055,13 +923,11 @@ document.getElementById(
 
 `🌙 Ramadan • ${ramadhanDays} Hari Lagi`;
 
-
 document.getElementById(
 "aidilfitri-countdown"
 ).innerHTML =
 
 `🎉 Aidilfitri • ${rayaDays} Hari Lagi`;
-
 
 document.getElementById(
 "aidiladha-countdown"
@@ -1107,5 +973,5 @@ updateIslamicCountdown();
 
 setInterval(
 checkPrayerAlerts,
-1000
+30000
 );
