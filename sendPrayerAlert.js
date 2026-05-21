@@ -6,33 +6,90 @@ res
 try{
 
 // =========================
-// CRON START
+// GET MESSAGE
 // =========================
 
+const message =
+req.query.message ||
+"🕌 Waktu Solat";
+
 console.log(
-"🕌 CRON RUNNING..."
+"🕌 SENDING PUSH:",
+message
 );
 
 
 // =========================
-// DEBUG TEST
+// SEND TO ONESIGNAL
 // =========================
 
+const response =
+await fetch(
+"https://onesignal.com/api/v1/notifications",
+{
+method:"POST",
+
+headers:{
+
+"Content-Type":
+"application/json",
+
+Authorization:
+`Basic ${process.env.ONESIGNAL_API_KEY}`
+
+},
+
+body:JSON.stringify({
+
+app_id:
+"399a4625-3fc2-47fd-b4a7-5e50c5542f53",
+
+included_segments:[
+"Subscribed Users"
+],
+
+headings:{
+en:"🕌 MY SOLAT"
+},
+
+contents:{
+en:message
+},
+
+ios_sound:"default",
+
+chrome_web_icon:
+"https://solatmys.vercel.app/icon-192.png",
+
+large_icon:
+"https://solatmys.vercel.app/icon-512.png"
+
+})
+
+}
+);
+
+
+const data =
+await response.json();
+
 console.log(
-"✅ CRON WEBSITE HIT API"
+"✅ ONESIGNAL RESPONSE:",
+data
 );
 
 
 // =========================
-// RETURN TEST
+// SUCCESS
 // =========================
 
 return res.status(200).json({
 
 success:true,
 
-message:
-"CRON WORKING"
+message:message,
+
+onesignal:data
 
 });
 
@@ -40,11 +97,14 @@ message:
 
 catch(error){
 
-console.log(error);
+console.log(
+"❌ PUSH ERROR:",
+error
+);
 
 
 // =========================
-// ERROR
+// ERROR RESPONSE
 // =========================
 
 return res.status(500).json({
