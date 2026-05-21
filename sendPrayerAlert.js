@@ -20,11 +20,11 @@ message
 
 
 // =========================
-// SUBSCRIPTION ID
+// FRESH SUBSCRIPTION ID
 // =========================
 
 const subscriptionId =
-"cb4bf2dc-18d7-4e2d-9d56-9b12d1724bea";
+"46f855b5-b9b4-427d-8553-b56d57d2bd4e";
 
 
 // =========================
