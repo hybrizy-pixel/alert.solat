@@ -40,15 +40,9 @@ body:JSON.stringify({
 app_id:
 process.env.ONESIGNAL_APP_ID,
 
-include_aliases:{
-external_id:[
-"test-user"
-]
-},
-
-target_channel:"push",
-
-channel_for_external_user_ids:"push",
+included_segments:[
+"Subscribed Users"
+],
 
 headings:{
 en:"🕌 MY SOLAT"
@@ -222,16 +216,9 @@ body:JSON.stringify({
 app_id:
 process.env.ONESIGNAL_APP_ID,
 
-include_aliases:{
-external_id:[
-"test-user"
-]
-},
-
-target_channel:"push",
-
-channel_for_external_user_ids:"push",
-
+included_segments:[
+"Subscribed Users"
+],
 headings:{
 en:"🕌 MY SOLAT"
 },
@@ -283,15 +270,9 @@ body:JSON.stringify({
 app_id:
 process.env.ONESIGNAL_APP_ID,
 
-include_aliases:{
-external_id:[
-"test-user"
-]
-},
-
-target_channel:"push",
-
-channel_for_external_user_ids:"push",
+included_segments:[
+"Subscribed Users"
+],
 
 headings:{
 en:"🕌 MY SOLAT"
