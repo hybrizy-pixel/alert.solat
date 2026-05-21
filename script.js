@@ -81,7 +81,16 @@ const zoneMap = {
 "shah alam":"sgr01",
 
 "kuala lumpur":"wly01",
-"putrajaya":"wly01"
+"putrajaya":"wly01",
+
+"johor bahru":"jhr02",
+"kulai":"jhr02",
+
+"muar":"jhr04",
+
+"seremban":"ngr01",
+
+"ipoh":"prk02"
 
 };
 
@@ -93,11 +102,6 @@ const zoneMap = {
 function updateClock(){
 
 const now = new Date();
-
-
-// =========================
-// MALAYSIA TIME
-// =========================
 
 const malaysiaTime =
 now.toLocaleTimeString(
@@ -113,10 +117,6 @@ document.getElementById(
 malaysiaTime;
 
 
-// =========================
-// MEKAH TIME
-// =========================
-
 const mekahTime =
 now.toLocaleTimeString(
 "en-GB",
@@ -131,10 +131,6 @@ document.getElementById(
 ).innerHTML =
 mekahTime;
 
-
-// =========================
-// DATE
-// =========================
 
 const date =
 now.toLocaleDateString(
@@ -348,10 +344,6 @@ prayer.isha.substring(0,5)
 };
 
 
-// =========================
-// UPDATE UI
-// =========================
-
 document.getElementById("imsak").innerHTML =
 prayerTimes.imsak;
 
@@ -450,11 +442,6 @@ break;
 
 }
 
-
-// =========================
-// NEXT DAY
-// =========================
-
 if(!nextPrayer){
 
 nextPrayer = {
@@ -466,11 +453,6 @@ time:prayerTimes.fajr
 };
 
 }
-
-
-// =========================
-// UPDATE NEXT UI
-// =========================
 
 document.getElementById(
 "next-prayer"
@@ -633,8 +615,10 @@ try{
 await OneSignal.Notifications
 .requestPermission();
 
+setTimeout(async()=>{
+
 const subscriptionId =
-OneSignal.User.PushSubscription.id;
+await OneSignal.User.PushSubscription.id;
 
 if(subscriptionId){
 
@@ -648,10 +632,6 @@ console.log(
 subscriptionId
 );
 
-}
-
-notificationEnabled = true;
-
 alert(
 "🔔 OneSignal Enabled"
 );
@@ -659,6 +639,10 @@ alert(
 console.log(
 "LOGIN SUCCESS"
 );
+
+}
+
+},2000);
 
 }
 
@@ -831,11 +815,6 @@ parseInt(hijri.month.number);
 const currentDay =
 parseInt(hijri.day);
 
-
-// =========================
-// RAMADHAN
-// =========================
-
 let ramadhanDays = 0;
 
 if(currentMonth < 9){
@@ -858,18 +837,8 @@ ramadhanDays =
 
 }
 
-
-// =========================
-// AIDILFITRI
-// =========================
-
 const rayaDays =
 ramadhanDays + 30;
-
-
-// =========================
-// AIDILADHA
-// =========================
 
 let hajiDays = 0;
 
@@ -892,11 +861,6 @@ hajiDays = 0;
 }
 
 }
-
-
-// =========================
-// UPDATE UI
-// =========================
 
 document.getElementById(
 "ramadhan-countdown"
