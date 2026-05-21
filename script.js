@@ -618,7 +618,7 @@ await OneSignal.Notifications
 setTimeout(async()=>{
 
 const subscriptionId =
-await OneSignal.User.PushSubscription.id;
+await OneSignal.User.PushSubscription.getIdAsync();
 
 if(subscriptionId){
 
@@ -632,14 +632,10 @@ console.log(
 subscriptionId
 );
 
-alert(
-`SUB ID: ${subscriptionId}`
-);
-
 notificationEnabled = true;
 
 alert(
-"🔔 OneSignal Enabled"
+`✅ CONNECTED\n\n${subscriptionId}`
 );
 
 console.log(
