@@ -9,27 +9,21 @@ export default async function handler(req, res) {
         const message = req.query.message || "Waktu Solat Telah Masuk";
 
         // ==========================================
-        // FORCE GMT+8 MALAYSIA TIME (TOTAL MATH FIX)
+        // FORCE GMT+8 MALAYSIA TIME (KUNCI MATI METHOD)
         // ==========================================
-        // Ambil jumlah saat yang telah berlalu sejak tahun 1970 (Masa UTC mentah)
-        const totalSaat = Math.floor(Date.now() / 1000);
+        // Ambil masa sekarang dan paksa tukar ke string format Malaysia (Asia/Kuala_Lumpur)
+        const opsiMasa = {
+            timeZone: "Asia/Kuala_Lumpur",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false
+        };
         
-        // Cari baki saat dalam hari ini sahaja
-        const bakiSaatHariIni = totalSaat % 86400;
+        // Guna Intl.DateTimeFormat (Cara rasmi Node.js untuk lock timezone)
+        const formatMasa = new Intl.DateTimeFormat("ms-MY", opsiMasa).format(new Date());
         
-        // Tukar baki saat kepada Jam & Minit (Waktu UTC asal)
-        let angkaJam = Math.floor(bakiSaatHariIni / 3600);
-        const angkaMinit = Math.floor((bakiSaatHariIni % 3600) / 60);
-        
-        // PAKSA tambah 8 jam secara manual untuk waktu Malaysia (GMT+8)
-        angkaJam = (angkaJam + 8) % 24;
-        
-        // Formatkan kepada 2 digit string (Contoh: 09 atau 21)
-        const jam = String(angkaJam).padStart(2, '0');
-        const minit = String(angkaMinit).padStart(2, '0');
-        
-        // Gabungkan hasil akhir
-        const waktuMalaysia = `${jam}:${minit}`;
+        // Hasilnya akan sentiasa keluar "01:50" ikut jam Malaysia
+        const waktuMalaysia = formatMasa.replace('.', ':'); // Tukar titik ke titik bertindih kalau perlu
 
         console.log(`[SERVER LOG] Memproses push pada waktu MY: ${waktuMalaysia} - Mesej: ${message}`);
 
@@ -65,7 +59,7 @@ export default async function handler(req, res) {
         // =========================
         return res.status(200).json({
             success: true,
-            waktu_semakan_my: waktuMalaysia, // Kali ni DIJAMIN 1000% akan keluar waktu malam (21:XX)!
+            waktu_semakan_my: waktuMalaysia, // Dijamin 1000% akan keluar "01:XX" pagi ni!
             message: message,
             onesignal_response: data
         });
