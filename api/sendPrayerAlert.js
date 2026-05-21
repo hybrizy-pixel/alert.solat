@@ -9,18 +9,23 @@ export default async function handler(req, res) {
         const message = req.query.message || "Waktu Solat Telah Masuk";
 
         // ==========================================
-        // FORCE GMT+8 MALAYSIA TIME (ULTIMATE FIX)
+        // FORCE GMT+8 MALAYSIA TIME (PURE MATHEMATICS)
         // ==========================================
-        // Cara paling kebal: Paksa convert ke string string Asia/Kuala_Lumpur, kemudian split ambil Jam & Minit
-        const stringWaktuMY = new Date().toLocaleTimeString("en-US", {
-            timeZone: "Asia/Kuala_Lumpur",
-            hour12: false,
-            hour: "2-digit",
-            minute: "2-digit"
-        });
+        // Ambil timestamp mentah sekarang (UTC) dalam bentuk milisaat
+        const masaSekarangMili = Date.now();
         
-        // Bersihkan sebarang whitespace atau simbol pelik (Contoh hasil: "21:25")
-        const waktuMalaysia = stringWaktuMY.trim();
+        // Tambah tepat-tepat 8 jam (8 jam * 60 minit * 60 saat * 1000 milisaat = 28,800,000)
+        const masaMalaysiaMili = masaSekarangMili + 28800000;
+        
+        // Tukar semula kepada objek Date baharu yang dah siap ditambah 8 jam
+        const objekMasaMY = new Date(masaMalaysiaMili);
+        
+        // Ekstrak Jam dan Minit secara manual
+        const jam = String(objekMasaMY.getUTCHours()).padStart(2, '0');
+        const minit = String(objekMasaMY.getUTCMinutes()).padStart(2, '0');
+        
+        // Gabungkan jadi format "21:27"
+        const waktuMalaysia = `${jam}:${minit}`;
 
         console.log(`[SERVER LOG] Memproses push pada waktu MY: ${waktuMalaysia} - Mesej: ${message}`);
 
@@ -56,7 +61,7 @@ export default async function handler(req, res) {
         // =========================
         return res.status(200).json({
             success: true,
-            waktu_semakan_my: waktuMalaysia, // Ini wajib akan keluar jam malam Malaysia yang betul!
+            waktu_semakan_my: waktuMalaysia, // Kali ni DIJAMIN akan keluar jam Malaysia (21:XX)!
             message: message,
             onesignal_response: data
         });
