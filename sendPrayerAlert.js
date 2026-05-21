@@ -20,15 +20,7 @@ message
 
 
 // =========================
-// FRESH SUBSCRIPTION ID
-// =========================
-
-const subscriptionId =
-"46f855b5-b9b4-427d-8553-b56d57d2bd4e";
-
-
-// =========================
-// SEND TO ONESIGNAL
+// SEND TO ONESIGNAL V5
 // =========================
 
 const response =
@@ -52,9 +44,12 @@ body:JSON.stringify({
 app_id:
 "399a4625-3fc2-47fd-b4a7-5e50c5542f53",
 
-include_subscription_ids:[
-subscriptionId
+included_segments:[
+"Subscribed Users"
 ],
+
+target_channel:
+"push",
 
 headings:{
 en:"🕌 MY SOLAT"
@@ -101,8 +96,6 @@ return res.status(200).json({
 success:true,
 
 message:message,
-
-subscriptionId:subscriptionId,
 
 onesignal:data
 
