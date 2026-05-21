@@ -41,8 +41,10 @@ app_id:
 process.env.ONESIGNAL_APP_ID,
 
 included_segments:[
-"Subscribed Users"
+"Total Subscriptions"
 ],
+
+target_channel:"push",
 
 headings:{
 en:"🕌 MY SOLAT"
@@ -217,8 +219,10 @@ app_id:
 process.env.ONESIGNAL_APP_ID,
 
 included_segments:[
-"Subscribed Users"
+"Total Subscriptions"
 ],
+
+target_channel:"push",
 
 headings:{
 en:"🕌 MY SOLAT"
@@ -272,8 +276,10 @@ app_id:
 process.env.ONESIGNAL_APP_ID,
 
 included_segments:[
-"Subscribed Users"
+"Total Subscriptions"
 ],
+
+target_channel:"push",
 
 headings:{
 en:"🕌 MY SOLAT"
