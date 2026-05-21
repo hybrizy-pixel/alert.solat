@@ -622,24 +622,15 @@ await OneSignal.User.PushSubscription.getIdAsync();
 
 if(subscriptionId){
 
-localStorage.setItem(
-"subscriptionId",
-subscriptionId
-);
+notificationEnabled = true;
 
 console.log(
 "SUBSCRIPTION ID:",
 subscriptionId
 );
 
-notificationEnabled = true;
-
 alert(
 `✅ CONNECTED\n\n${subscriptionId}`
-);
-
-console.log(
-"LOGIN SUCCESS"
 );
 
 }
@@ -652,7 +643,7 @@ alert(
 
 }
 
-},2000);
+},3000);
 
 }
 
@@ -679,15 +670,8 @@ try{
 
 playAzan("Maghrib");
 
-const subscriptionId =
-localStorage.getItem(
-"subscriptionId"
-);
-
 await fetch(
-
-`/api/sendPrayerAlert?message=TEST PUSH&subscriptionId=${subscriptionId}`
-
+`/api/sendPrayerAlert?message=TEST PUSH`
 );
 
 alert(
@@ -735,13 +719,13 @@ prayer.time.split(":").map(Number);
 
 
 // =========================
-// 1 HOUR BEFORE TEST
+// 10 MIN BEFORE
 // =========================
 
 const before = new Date();
 
 before.setHours(hour);
-before.setMinutes(minute - 60);
+before.setMinutes(minute - 10);
 
 const beforeTime =
 `${String(before.getHours()).padStart(2,"0")}:${String(before.getMinutes()).padStart(2,"0")}`;
@@ -755,16 +739,11 @@ lastNotification =
 `${prayer.name}-before`;
 
 alert(
-`🕌 ${prayer.name} Lagi 1 Jam`
-);
-
-const subscriptionId =
-localStorage.getItem(
-"subscriptionId"
+`🕌 ${prayer.name} Lagi 10 Minit`
 );
 
 fetch(
-`/api/sendPrayerAlert?message=${prayer.name} Lagi 1 Jam&subscriptionId=${subscriptionId}`
+`/api/sendPrayerAlert?message=${prayer.name} Lagi 10 Minit`
 );
 
 }
@@ -788,13 +767,8 @@ alert(
 `🕌 Waktu ${prayer.name} Telah Masuk`
 );
 
-const subscriptionId =
-localStorage.getItem(
-"subscriptionId"
-);
-
 fetch(
-`/api/sendPrayerAlert?message=Waktu ${prayer.name} Telah Masuk&subscriptionId=${subscriptionId}`
+`/api/sendPrayerAlert?message=Waktu ${prayer.name} Telah Masuk`
 );
 
 }
