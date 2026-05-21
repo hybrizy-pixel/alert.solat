@@ -1,0 +1,765 @@
+/* =========================
+GLOBAL
+========================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+
+background-image:
+url('mekah.jpg');
+
+background-size:cover;
+
+background-position:center;
+
+background-repeat:no-repeat;
+
+background-attachment:fixed;
+
+min-height:100vh;
+
+color:white;
+
+overflow-x:hidden;
+
+}
+
+
+/* =========================
+OVERLAY
+========================= */
+
+body::before{
+
+content:"";
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+background:
+rgba(0,0,0,0.55);
+
+z-index:-1;
+
+}
+
+
+/* =========================
+APP
+========================= */
+
+.app{
+
+padding:20px;
+
+max-width:500px;
+
+margin:auto;
+
+}
+
+
+/* =========================
+HEADER
+========================= */
+
+.header{
+
+text-align:center;
+
+margin-top:20px;
+
+margin-bottom:30px;
+
+}
+
+.header h1{
+
+font-size:36px;
+
+font-weight:700;
+
+margin-bottom:10px;
+
+letter-spacing:3px;
+
+text-shadow:
+0 0 10px #000000,
+0 0 20px #ff9800;
+
+}
+
+
+/* =========================
+DUAL CLOCK
+========================= */
+
+.dual-clock{
+
+display:flex;
+
+justify-content:center;
+
+gap:20px;
+
+flex-wrap:wrap;
+
+margin-top:20px;
+
+}
+
+.clock-box{
+
+background:
+rgba(255,255,255,0.08);
+
+padding:12px;
+
+border-radius:18px;
+
+min-width:145px;
+
+backdrop-filter:
+blur(10px);
+
+box-shadow:
+0 0 20px rgba(255,152,0,0.2);
+
+}
+
+.clock-label{
+
+font-size:14px;
+
+font-weight:700;
+
+letter-spacing:2px;
+
+margin-bottom:10px;
+
+color:#ffffff;
+
+text-shadow:
+0 0 10px #ff9800;
+
+}
+
+
+/* =========================
+PALESTINE CLOCK
+========================= */
+
+.malaysia-clock #current-time{
+
+font-family:'Orbitron',sans-serif;
+
+font-size:24px;
+
+font-weight:900;
+
+letter-spacing:2px;
+
+color:#00ff66;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #00ff66,
+0 0 20px #00ff66,
+0 0 40px #00ff66;
+
+animation:
+greenGlow 1.5s infinite;
+
+}
+
+
+/* =========================
+MEKAH CLOCK
+========================= */
+
+.mekah-clock #mekah-time{
+
+font-family:'Orbitron',sans-serif;
+
+font-size:24px;
+
+font-weight:900;
+
+letter-spacing:2px;
+
+color:#ff9800;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff9800,
+0 0 20px #ff6d00,
+0 0 40px #ff6d00;
+
+animation:
+orangeGlow 1.5s infinite;
+
+}
+
+
+#date,
+#hijri-date,
+#location{
+
+font-size:15px;
+
+opacity:0.95;
+
+margin-top:5px;
+
+}
+
+
+/* =========================
+CARD
+========================= */
+
+.next-prayer-card,
+.prayer-times,
+.islamic-events{
+
+background:
+rgba(255,255,255,0.1);
+
+backdrop-filter:
+blur(12px);
+
+padding:20px;
+
+border-radius:25px;
+
+margin-bottom:25px;
+
+border:
+1px solid rgba(255,255,255,0.15);
+
+box-shadow:
+0 8px 30px rgba(0,0,0,0.35);
+
+}
+
+
+/* =========================
+HEADINGS
+========================= */
+
+.next-prayer-card h2,
+.prayer-times h2,
+.islamic-events h2{
+
+text-align:center;
+
+font-size:24px;
+
+margin-bottom:20px;
+
+letter-spacing:2px;
+
+text-transform:uppercase;
+
+}
+
+
+/* =========================
+NEXT PRAYER
+========================= */
+
+#next-prayer{
+
+font-family:'Orbitron',sans-serif;
+
+font-size:38px;
+
+font-weight:900;
+
+margin-bottom:20px;
+
+text-transform:uppercase;
+
+letter-spacing:5px;
+
+color:#ff1744;
+
+text-align:center;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff1744,
+0 0 20px #ff1744,
+0 0 40px #ff0000,
+0 0 80px #ff0000;
+
+animation:
+redBlink 1s infinite;
+
+}
+
+
+/* =========================
+COUNTDOWN
+========================= */
+
+.countdown{
+
+display:flex;
+
+justify-content:center;
+
+gap:15px;
+
+}
+
+.time-box{
+
+background:
+rgba(255,255,255,0.12);
+
+padding:15px;
+
+border-radius:20px;
+
+width:80px;
+
+text-align:center;
+
+box-shadow:
+0 0 15px rgba(255,152,0,0.2);
+
+}
+
+.time-box span{
+
+display:block;
+
+font-size:30px;
+
+font-weight:700;
+
+color:#ff9800;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff9800,
+0 0 20px #ff6d00,
+0 0 30px #ff6d00;
+
+animation:
+orangeGlow 2s infinite;
+
+}
+
+.time-box small{
+
+font-size:12px;
+
+letter-spacing:1px;
+
+}
+
+
+/* =========================
+PRAYER ROW
+========================= */
+
+.prayer-row{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:15px 10px;
+
+border-bottom:
+1px solid rgba(255,255,255,0.1);
+
+font-size:18px;
+
+transition:0.3s;
+
+}
+
+.prayer-row:last-child{
+
+border-bottom:none;
+
+}
+
+
+/* =========================
+DEFAULT TIME GLOW
+========================= */
+
+.prayer-row span:last-child{
+
+font-weight:700;
+
+color:#ff9800;
+
+transition:0.3s;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff9800,
+0 0 20px #ff6d00;
+
+}
+
+
+/* =========================
+ACTIVE PRAYER
+========================= */
+
+.active-prayer{
+
+background:
+rgba(255,0,0,0.12);
+
+border-radius:15px;
+
+padding-left:10px;
+
+padding-right:10px;
+
+box-shadow:
+0 0 15px rgba(255,0,0,0.4),
+0 0 30px rgba(255,0,0,0.6);
+
+animation:
+redBlink 1s infinite;
+
+}
+
+
+/* =========================
+ACTIVE TIME RED GLOW
+========================= */
+
+.active-prayer span:last-child{
+
+color:#ff1744;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff1744,
+0 0 20px #ff1744,
+0 0 40px #ff0000,
+0 0 60px #ff0000;
+
+animation:
+redBlink 1s infinite;
+
+}
+
+
+/* =========================
+BUTTON GROUP
+========================= */
+
+.button-group{
+
+display:flex;
+
+flex-direction:column;
+
+gap:15px;
+
+margin-bottom:25px;
+
+}
+
+button{
+
+border:none;
+
+padding:16px;
+
+border-radius:20px;
+
+font-size:16px;
+
+font-weight:700;
+
+cursor:pointer;
+
+transition:0.3s;
+
+color:white;
+
+letter-spacing:1px;
+
+}
+
+button:hover{
+
+transform:scale(1.03);
+
+}
+
+
+/* =========================
+BUTTON COLORS
+========================= */
+
+.notify-btn{
+
+background:
+linear-gradient(
+135deg,
+#00c853,
+#009624
+);
+
+}
+
+.test-btn{
+
+background:
+linear-gradient(
+135deg,
+#ff9800,
+#ef6c00
+);
+
+}
+
+.mute-btn{
+
+background:
+linear-gradient(
+135deg,
+#ff1744,
+#d50000
+);
+
+}
+
+
+/* =========================
+EVENT ITEM
+========================= */
+
+.event-item{
+
+padding:14px;
+
+margin-bottom:12px;
+
+border-radius:15px;
+
+background:
+rgba(255,255,255,0.08);
+
+font-size:16px;
+
+box-shadow:
+0 0 10px rgba(255,152,0,0.15);
+
+}
+
+
+/* =========================
+FOOTER
+========================= */
+
+.footer{
+
+text-align:center;
+
+font-size:13px;
+
+opacity:0.8;
+
+padding-bottom:30px;
+
+letter-spacing:2px;
+
+}
+
+
+/* =========================
+GREEN GLOW
+========================= */
+
+@keyframes greenGlow{
+
+0%{
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #00ff66,
+0 0 20px #00ff66;
+
+}
+
+50%{
+
+text-shadow:
+0 0 10px #000000,
+0 0 20px #00ff66,
+0 0 40px #00ff66;
+
+}
+
+100%{
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #00ff66,
+0 0 20px #00ff66;
+
+}
+
+}
+
+
+/* =========================
+ORANGE GLOW
+========================= */
+
+@keyframes orangeGlow{
+
+0%{
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff9800,
+0 0 20px #ff6d00;
+
+}
+
+50%{
+
+text-shadow:
+0 0 10px #000000,
+0 0 20px #ff9800,
+0 0 40px #ff6d00;
+
+}
+
+100%{
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff9800,
+0 0 20px #ff6d00;
+
+}
+
+}
+
+
+/* =========================
+RED BLINK
+========================= */
+
+@keyframes redBlink{
+
+0%{
+
+opacity:1;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff1744,
+0 0 20px #ff1744,
+0 0 40px #ff0000;
+
+}
+
+50%{
+
+opacity:0.4;
+
+text-shadow:
+0 0 2px #000000,
+0 0 5px #ff1744,
+0 0 10px #ff0000;
+
+}
+
+100%{
+
+opacity:1;
+
+text-shadow:
+0 0 5px #000000,
+0 0 10px #ff1744,
+0 0 20px #ff1744,
+0 0 40px #ff0000;
+
+}
+
+}
+
+
+/* =========================
+MOBILE
+========================= */
+
+@media(max-width:600px){
+
+#next-prayer{
+
+font-size:28px;
+
+}
+
+.time-box{
+
+width:70px;
+
+padding:12px;
+
+}
+
+.time-box span{
+
+font-size:24px;
+
+}
+
+.prayer-row{
+
+font-size:16px;
+
+}
+
+button{
+
+font-size:14px;
+
+padding:14px;
+
+}
+
+.clock-box{
+
+min-width:130px;
+
+}
+
+.malaysia-clock #current-time,
+.mekah-clock #mekah-time{
+
+font-size:20px;
+
+}
+
+}
