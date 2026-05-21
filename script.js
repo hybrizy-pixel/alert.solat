@@ -812,6 +812,10 @@ alert(
 `🕌 ${prayer.name} Lagi 10 Minit`
 );
 
+fetch(
+`/api/sendPrayerAlert?message=${prayer.name} Lagi 10 Minit`
+);
+
 }
 
 
@@ -831,6 +835,10 @@ playAzan(prayer.name);
 
 alert(
 `🕌 Waktu ${prayer.name} Telah Masuk`
+);
+
+fetch(
+`/api/sendPrayerAlert?message=Waktu ${prayer.name} Telah Masuk`
 );
 
 }
