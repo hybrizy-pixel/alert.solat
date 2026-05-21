@@ -40,9 +40,11 @@ body:JSON.stringify({
 app_id:
 process.env.ONESIGNAL_APP_ID,
 
-included_segments:[
-"Total Subscriptions"
-],
+include_aliases:{
+external_id:[
+"test-user"
+]
+},
 
 target_channel:"push",
 
@@ -218,9 +220,11 @@ body:JSON.stringify({
 app_id:
 process.env.ONESIGNAL_APP_ID,
 
-included_segments:[
-"Total Subscriptions"
-],
+include_aliases:{
+external_id:[
+"test-user"
+]
+},
 
 target_channel:"push",
 
@@ -275,9 +279,11 @@ body:JSON.stringify({
 app_id:
 process.env.ONESIGNAL_APP_ID,
 
-included_segments:[
-"Total Subscriptions"
-],
+include_aliases:{
+external_id:[
+"test-user"
+]
+},
 
 target_channel:"push",
 
