@@ -1,4 +1,35 @@
 // =========================
+// ONESIGNAL INIT
+// =========================
+
+window.OneSignalDeferred =
+window.OneSignalDeferred || [];
+
+OneSignalDeferred.push(
+async function(OneSignal){
+
+await OneSignal.init({
+
+appId:
+"399a4625-3fc2-47fd-b4a7-5e50c5542f53",
+
+safari_web_id:
+"web.onesignal.auto.REPLACE_THIS",
+
+notifyButton:{
+enable:false
+}
+
+});
+
+console.log(
+"✅ OneSignal Ready"
+);
+
+});
+
+
+// =========================
 // GLOBAL VARIABLES
 // =========================
 
@@ -23,11 +54,6 @@ let lastCity = "";
 
 const zoneMap = {
 
-
-// =========================
-// KEDAH
-// =========================
-
 "jitra":"kdh01",
 "kubang pasu":"kdh01",
 "alor setar":"kdh01",
@@ -47,65 +73,24 @@ const zoneMap = {
 
 "langkawi":"kdh06",
 
-
-// =========================
-// PENANG
-// =========================
-
 "george town":"png01",
 "penang":"png01",
-"bukit mertajam":"png01",
-"butterworth":"png01",
-
-
-// =========================
-// SELANGOR
-// =========================
 
 "bangi":"sgr01",
 "kajang":"sgr01",
 "shah alam":"sgr01",
-"petaling jaya":"sgr01",
-"gombak":"sgr01",
-"sepang":"sgr01",
-
-"klang":"sgr03",
-"kuala langat":"sgr03",
-
-
-// =========================
-// KL
-// =========================
 
 "kuala lumpur":"wly01",
 "putrajaya":"wly01",
 
-
-// =========================
-// JOHOR
-// =========================
-
 "johor bahru":"jhr02",
 "kulai":"jhr02",
 
-"batu pahat":"jhr04",
 "muar":"jhr04",
 
-
-// =========================
-// NEGERI SEMBILAN
-// =========================
-
 "seremban":"ngr01",
-"nilai":"ngr01",
 
-
-// =========================
-// PERAK
-// =========================
-
-"ipoh":"prk02",
-"taiping":"prk01"
+"ipoh":"prk02"
 
 };
 
@@ -114,14 +99,9 @@ const zoneMap = {
 // UPDATE CLOCK
 // =========================
 
-function updateClock() {
+function updateClock(){
 
 const now = new Date();
-
-
-// =========================
-// MALAYSIA TIME
-// =========================
 
 const malaysiaTime =
 now.toLocaleTimeString(
@@ -136,10 +116,6 @@ document.getElementById(
 ).innerHTML =
 malaysiaTime;
 
-
-// =========================
-// MEKAH TIME
-// =========================
 
 const mekahTime =
 now.toLocaleTimeString(
@@ -156,11 +132,8 @@ document.getElementById(
 mekahTime;
 
 
-// =========================
-// DATE
-// =========================
-
-const date = now.toLocaleDateString(
+const date =
+now.toLocaleDateString(
 "ms-MY",
 {
 weekday:"long",
@@ -172,18 +145,19 @@ day:"numeric"
 
 document.getElementById(
 "date"
-).innerHTML = date;
+).innerHTML =
+date;
 
 }
 
 
 // =========================
-// HIJRI DATE
+// LOAD HIJRI DATE
 // =========================
 
-async function loadHijriDate() {
+async function loadHijriDate(){
 
-try {
+try{
 
 const response =
 await fetch(
@@ -214,17 +188,16 @@ console.log(error);
 
 
 // =========================
-// GET LOCATION + AUTO ZONE
+// GET LOCATION
 // =========================
 
-async function getLocation() {
+async function getLocation(){
 
-if (!navigator.geolocation) return;
+if(!navigator.geolocation) return;
 
 document.getElementById(
 "location"
 ).innerHTML =
-
 "📍 Detecting Location...";
 
 
@@ -273,11 +246,6 @@ document.getElementById(
 const cityLower =
 city.toLowerCase();
 
-
-// =========================
-// AVOID RELOAD
-// =========================
-
 if(cityLower === lastCity){
 
 return;
@@ -285,11 +253,6 @@ return;
 }
 
 lastCity = cityLower;
-
-
-// =========================
-// AUTO ZONE
-// =========================
 
 if(zoneMap[cityLower]){
 
@@ -299,11 +262,6 @@ zoneMap[cityLower];
 if(newZone !== currentZone){
 
 currentZone = newZone;
-
-console.log(
-"🕌 NEW ZONE:",
-currentZone
-);
 
 loadPrayerTimes();
 
@@ -342,9 +300,9 @@ maximumAge:600000
 // LOAD PRAYER TIME
 // =========================
 
-async function loadPrayerTimes() {
+async function loadPrayerTimes(){
 
-try {
+try{
 
 const response =
 await fetch(
@@ -386,10 +344,6 @@ prayer.isha.substring(0,5)
 };
 
 
-// =========================
-// UPDATE UI
-// =========================
-
 document.getElementById("imsak").innerHTML =
 prayerTimes.imsak;
 
@@ -428,9 +382,9 @@ console.log(error);
 // UPDATE NEXT PRAYER
 // =========================
 
-function updateNextPrayer() {
+function updateNextPrayer(){
 
-if (!prayerTimes.fajr) return;
+if(!prayerTimes.fajr) return;
 
 const now = new Date();
 
@@ -470,12 +424,7 @@ time:prayerTimes.isha
 
 nextPrayer = null;
 
-
-// =========================
-// FIND NEXT PRAYER
-// =========================
-
-for (const prayer of prayers) {
+for(const prayer of prayers){
 
 const [hour,minute] =
 prayer.time.split(":").map(Number);
@@ -483,7 +432,7 @@ prayer.time.split(":").map(Number);
 const prayerMinutes =
 hour * 60 + minute;
 
-if (prayerMinutes > currentMinutes) {
+if(prayerMinutes > currentMinutes){
 
 nextPrayer = prayer;
 
@@ -493,12 +442,7 @@ break;
 
 }
 
-
-// =========================
-// NEXT DAY
-// =========================
-
-if (!nextPrayer) {
+if(!nextPrayer){
 
 nextPrayer = {
 
@@ -509,11 +453,6 @@ time:prayerTimes.fajr
 };
 
 }
-
-
-// =========================
-// UPDATE UI
-// =========================
 
 document.getElementById(
 "next-prayer"
@@ -529,11 +468,11 @@ highlightPrayer();
 // COUNTDOWN
 // =========================
 
-function startCountdown() {
+function startCountdown(){
 
 setInterval(()=>{
 
-if (!nextPrayer) return;
+if(!nextPrayer) return;
 
 const now = new Date();
 
@@ -546,7 +485,7 @@ target.setHours(hour);
 target.setMinutes(minute);
 target.setSeconds(0);
 
-if (target <= now) {
+if(target <= now){
 
 target.setDate(
 target.getDate() + 1
@@ -570,11 +509,6 @@ Math.floor(
 (diff / 1000) % 60
 );
 
-
-// =========================
-// UPDATE UI
-// =========================
-
 document.getElementById("hours").innerHTML =
 String(hours).padStart(2,"0");
 
@@ -595,7 +529,7 @@ updateNextPrayer();
 // HIGHLIGHT PRAYER
 // =========================
 
-function highlightPrayer() {
+function highlightPrayer(){
 
 document
 .querySelectorAll(".prayer-row")
@@ -607,7 +541,7 @@ row.classList.remove(
 
 });
 
-if (!nextPrayer) return;
+if(!nextPrayer) return;
 
 const prayerMap = {
 
@@ -625,7 +559,7 @@ prayerMap[nextPrayer.name];
 const element =
 document.getElementById(id);
 
-if (element) {
+if(element){
 
 element.parentElement.classList.add(
 "active-prayer"
@@ -671,23 +605,6 @@ currentAudio.play().catch(()=>{});
 
 
 // =========================
-// MUTE AZAN
-// =========================
-
-function muteAzan(){
-
-if(currentAudio){
-
-currentAudio.pause();
-
-currentAudio.currentTime = 0;
-
-}
-
-}
-
-
-// =========================
 // ENABLE NOTIFICATION
 // =========================
 
@@ -698,25 +615,45 @@ try{
 await OneSignal.Notifications
 .requestPermission();
 
-await OneSignal.login(
-"test-user"
-);
+setTimeout(async()=>{
 
-console.log(
-"LOGIN SUCCESS"
-);
+const subscriptionId =
+await OneSignal.User.PushSubscription.getIdAsync();
+
+if(subscriptionId){
 
 notificationEnabled = true;
 
-alert(
-"🔔 OneSignal Enabled"
+console.log(
+"SUBSCRIPTION ID:",
+subscriptionId
 );
+
+alert(
+`✅ CONNECTED\n\n${subscriptionId}`
+);
+
+}
+
+else{
+
+alert(
+"❌ Subscription Failed"
+);
+
+}
+
+},3000);
 
 }
 
 catch(error){
 
 console.log(error);
+
+alert(
+`ERROR: ${error.message}`
+);
 
 }
 
@@ -734,13 +671,11 @@ try{
 playAzan("Maghrib");
 
 await fetch(
-
-"/api/sendPrayerAlert?message=TEST AZAN ALERT"
-
+`/api/sendPrayerAlert?message=TEST PUSH`
 );
 
 alert(
-"✅ OneSignal Test Sent"
+"✅ Push Sent"
 );
 
 }
@@ -803,13 +738,12 @@ lastNotification !== `${prayer.name}-before`
 lastNotification =
 `${prayer.name}-before`;
 
-const beep =
-new Audio("beep.mp3");
-
-beep.play().catch(()=>{});
-
 alert(
 `🕌 ${prayer.name} Lagi 10 Minit`
+);
+
+fetch(
+`/api/sendPrayerAlert?message=${prayer.name} Lagi 10 Minit`
 );
 
 }
@@ -833,6 +767,10 @@ alert(
 `🕌 Waktu ${prayer.name} Telah Masuk`
 );
 
+fetch(
+`/api/sendPrayerAlert?message=Waktu ${prayer.name} Telah Masuk`
+);
+
 }
 
 });
@@ -844,9 +782,9 @@ alert(
 // ISLAMIC EVENT COUNTDOWN
 // =========================
 
-async function updateIslamicCountdown() {
+async function updateIslamicCountdown(){
 
-try {
+try{
 
 const response =
 await fetch(
@@ -887,7 +825,7 @@ ramadhanDays =
 
 }
 
-let rayaDays =
+const rayaDays =
 ramadhanDays + 30;
 
 let hajiDays = 0;
@@ -911,11 +849,6 @@ hajiDays = 0;
 }
 
 }
-
-
-// =========================
-// UPDATE UI
-// =========================
 
 document.getElementById(
 "ramadhan-countdown"
