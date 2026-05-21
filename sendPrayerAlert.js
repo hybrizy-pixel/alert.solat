@@ -20,6 +20,14 @@ message
 
 
 // =========================
+// DIRECT SUBSCRIPTION ID
+// =========================
+
+const subscriptionId =
+"cb4bf2dc-18d7-4e2d-9d56-9b12d1724bea";
+
+
+// =========================
 // SEND TO ONESIGNAL
 // =========================
 
@@ -44,8 +52,8 @@ body:JSON.stringify({
 app_id:
 "399a4625-3fc2-47fd-b4a7-5e50c5542f53",
 
-included_segments:[
-"Subscribed Users"
+include_subscription_ids:[
+subscriptionId
 ],
 
 headings:{
@@ -88,6 +96,8 @@ return res.status(200).json({
 success:true,
 
 message:message,
+
+subscriptionId:subscriptionId,
 
 onesignal:data
 
