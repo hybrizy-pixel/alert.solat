@@ -727,7 +727,7 @@ prayer.time.split(":").map(Number);
 const before = new Date();
 
 before.setHours(hour);
-before.setMinutes(minute - 60)
+before.setMinutes(minute - 56)
 
 const beforeTime =
 `${String(before.getHours()).padStart(2,"0")}:${String(before.getMinutes()).padStart(2,"0")}`;
