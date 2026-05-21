@@ -633,11 +633,25 @@ subscriptionId
 );
 
 alert(
+`SUB ID: ${subscriptionId}`
+);
+
+notificationEnabled = true;
+
+alert(
 "🔔 OneSignal Enabled"
 );
 
 console.log(
 "LOGIN SUCCESS"
+);
+
+}
+
+else{
+
+alert(
+"❌ Subscription Failed"
 );
 
 }
@@ -649,6 +663,10 @@ console.log(
 catch(error){
 
 console.log(error);
+
+alert(
+`ERROR: ${error.message}`
+);
 
 }
 
@@ -721,13 +739,13 @@ prayer.time.split(":").map(Number);
 
 
 // =========================
-// 10 MIN BEFORE
+// 1 HOUR BEFORE TEST
 // =========================
 
 const before = new Date();
 
 before.setHours(hour);
-before.setMinutes(minute - 56)
+before.setMinutes(minute - 60);
 
 const beforeTime =
 `${String(before.getHours()).padStart(2,"0")}:${String(before.getMinutes()).padStart(2,"0")}`;
@@ -741,7 +759,7 @@ lastNotification =
 `${prayer.name}-before`;
 
 alert(
-`🕌 ${prayer.name} Lagi 10 Minit`
+`🕌 ${prayer.name} Lagi 1 Jam`
 );
 
 const subscriptionId =
@@ -750,7 +768,7 @@ localStorage.getItem(
 );
 
 fetch(
-`/api/sendPrayerAlert?message=${prayer.name} Lagi 10 Minit&subscriptionId=${subscriptionId}`
+`/api/sendPrayerAlert?message=${prayer.name} Lagi 1 Jam&subscriptionId=${subscriptionId}`
 );
 
 }
