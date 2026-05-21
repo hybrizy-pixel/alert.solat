@@ -20,7 +20,7 @@ message
 
 
 // =========================
-// DIRECT SUBSCRIPTION ID
+// PLAYER ID
 // =========================
 
 const subscriptionId =
@@ -33,7 +33,7 @@ const subscriptionId =
 
 const response =
 await fetch(
-"https://api.onesignal.com/notifications",
+"https://onesignal.com/api/v1/notifications",
 {
 method:"POST",
 
@@ -43,7 +43,7 @@ headers:{
 "application/json",
 
 Authorization:
-`Key ${process.env.ONESIGNAL_API_KEY}`
+`Basic ${process.env.ONESIGNAL_API_KEY}`
 
 },
 
@@ -52,10 +52,7 @@ body:JSON.stringify({
 app_id:
 "399a4625-3fc2-47fd-b4a7-5e50c5542f53",
 
-target_channel:
-"push",
-
-include_subscription_ids:[
+include_player_ids:[
 subscriptionId
 ],
 
@@ -82,6 +79,10 @@ large_icon:
 );
 
 
+// =========================
+// RESPONSE
+// =========================
+
 const data =
 await response.json();
 
@@ -92,7 +93,7 @@ data
 
 
 // =========================
-// SUCCESS RESPONSE
+// SUCCESS
 // =========================
 
 return res.status(200).json({
@@ -101,7 +102,7 @@ success:true,
 
 message:message,
 
-subscriptionId:subscriptionId,
+playerId:subscriptionId,
 
 onesignal:data
 
