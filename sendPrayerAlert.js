@@ -48,6 +48,8 @@ external_id:[
 
 target_channel:"push",
 
+channel_for_external_user_ids:"push",
+
 headings:{
 en:"🕌 MY SOLAT"
 },
@@ -228,6 +230,8 @@ external_id:[
 
 target_channel:"push",
 
+channel_for_external_user_ids:"push",
+
 headings:{
 en:"🕌 MY SOLAT"
 },
@@ -286,6 +290,8 @@ external_id:[
 },
 
 target_channel:"push",
+
+channel_for_external_user_ids:"push",
 
 headings:{
 en:"🕌 MY SOLAT"

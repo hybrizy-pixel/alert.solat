@@ -788,10 +788,20 @@ currentAudio.currentTime = 0;
 
 async function enableNotification(){
 
+async function enableNotification(){
+
 try{
 
 await OneSignal.Notifications
 .requestPermission();
+
+await OneSignal.login(
+"test-user"
+);
+
+console.log(
+"LOGIN SUCCESS"
+);
 
 notificationEnabled = true;
 
