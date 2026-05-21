@@ -8,16 +8,20 @@ export default async function handler(req, res) {
         // =========================
         const message = req.query.message || "Waktu Solat Telah Masuk";
 
-        // =========================
-        // AUTOMATIC TIMEZONE FIX
-        // =========================
-        // Settle isu server oversea. Ini akan paksa server baca waktu Malaysia (GMT+8)
-        const waktuMalaysia = new Date().toLocaleTimeString("en-GB", {
-            timeZone: "Asia/Kuala_Lumpur",
-            hour12: false,
-            hour: "2-digit",
-            minute: "2-digit"
-        });
+        // ==========================================
+        // FORCE GMT+8 MALAYSIA TIME (MANUAL FIX)
+        // ==========================================
+        // Ambil masa UTC terkini di server Vercel
+        const d = new Date();
+        const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+        
+        // Paksa tambah 8 jam untuk tukar ke Waktu Malaysia (GMT+8)
+        const waktuMY = new Date(utc + (3600000 * 8));
+        
+        // Formatkan kepada HH:MM (Contoh: "21:25")
+        const jam = String(waktuMY.getHours()).padStart(2, '0');
+        const minit = String(waktuMY.getMinutes()).padStart(2, '0');
+        const waktuMalaysia = `${jam}:${minit}`;
 
         console.log(`[SERVER LOG] Memproses push pada waktu MY: ${waktuMalaysia} - Mesej: ${message}`);
 
@@ -32,9 +36,10 @@ export default async function handler(req, res) {
                 "Authorization": `Basic ${process.env.ONESIGNAL_API_KEY}`
             },
             body: JSON.stringify({
-                app_id: "399a4625-3fc2-47fd-b4a7-5e50c5542f53",
+                // Menggunakan App ID secara dinamik dari Environment Variable Vercel
+                app_id: process.env.ONESIGNAL_APP_ID, 
                 
-                // FIXED: Ditukar ke "Subscribed Users" mengikut spesifikasi segmen OneSignal terkini
+                // Menggunakan segmen default yang betul untuk OneSignal
                 included_segments: ["Subscribed Users"], 
                 
                 headings: {
@@ -57,7 +62,7 @@ export default async function handler(req, res) {
         // =========================
         return res.status(200).json({
             success: true,
-            waktu_semakan_my: waktuMalaysia,
+            waktu_semakan_my: waktuMalaysia, // Ini akan pulangkan waktu Malaysia yang betul
             message: message,
             onesignal_response: data
         });
@@ -68,7 +73,7 @@ export default async function handler(req, res) {
         // =========================
         // ERROR RESPONSE
         // =========================
-        return res.status(500).json({
+       return res.status(500).json({
             success: false,
             error: error.message
         });
