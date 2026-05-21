@@ -22,8 +22,8 @@ export default async function handler(req, res) {
         // Guna Intl.DateTimeFormat (Cara rasmi Node.js untuk lock timezone)
         const formatMasa = new Intl.DateTimeFormat("ms-MY", opsiMasa).format(new Date());
         
-        // Hasilnya akan sentiasa keluar "01:50" ikut jam Malaysia
-        const waktuMalaysia = formatMasa.replace('.', ':'); // Tukar titik ke titik bertindih kalau perlu
+        // Hasilnya akan sentiasa keluar "02:00" (Ikut jam Malaysia sekarang)
+        const waktuMalaysia = formatMasa.replace('.', ':'); 
 
         console.log(`[SERVER LOG] Memproses push pada waktu MY: ${waktuMalaysia} - Mesej: ${message}`);
 
@@ -59,7 +59,7 @@ export default async function handler(req, res) {
         // =========================
         return res.status(200).json({
             success: true,
-            waktu_semakan_my: waktuMalaysia, // Dijamin 1000% akan keluar "01:XX" pagi ni!
+            waktu_semakan_my: waktuMalaysia, 
             message: message,
             onesignal_response: data
         });
