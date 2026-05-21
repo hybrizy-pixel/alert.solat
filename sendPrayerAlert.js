@@ -33,7 +33,7 @@ const subscriptionId =
 
 const response =
 await fetch(
-"https://onesignal.com/api/v1/notifications",
+"https://api.onesignal.com/notifications",
 {
 method:"POST",
 
@@ -43,7 +43,7 @@ headers:{
 "application/json",
 
 Authorization:
-`Basic ${process.env.ONESIGNAL_API_KEY}`
+`Key ${process.env.ONESIGNAL_API_KEY}`
 
 },
 
@@ -51,6 +51,9 @@ body:JSON.stringify({
 
 app_id:
 "399a4625-3fc2-47fd-b4a7-5e50c5542f53",
+
+target_channel:
+"push",
 
 include_subscription_ids:[
 subscriptionId
@@ -64,7 +67,8 @@ contents:{
 en:message
 },
 
-ios_sound:"default",
+ios_sound:
+"default",
 
 chrome_web_icon:
 "https://solatmys.vercel.app/icon-192.png",
@@ -88,7 +92,7 @@ data
 
 
 // =========================
-// SUCCESS
+// SUCCESS RESPONSE
 // =========================
 
 return res.status(200).json({
