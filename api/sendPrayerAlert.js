@@ -9,19 +9,18 @@ export default async function handler(req, res) {
         const message = req.query.message || "Waktu Solat Telah Masuk";
 
         // ==========================================
-        // FORCE GMT+8 MALAYSIA TIME (MANUAL FIX)
+        // FORCE GMT+8 MALAYSIA TIME (ULTIMATE FIX)
         // ==========================================
-        // Ambil masa UTC terkini di server Vercel
-        const d = new Date();
-        const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+        // Cara paling kebal: Paksa convert ke string string Asia/Kuala_Lumpur, kemudian split ambil Jam & Minit
+        const stringWaktuMY = new Date().toLocaleTimeString("en-US", {
+            timeZone: "Asia/Kuala_Lumpur",
+            hour12: false,
+            hour: "2-digit",
+            minute: "2-digit"
+        });
         
-        // Paksa tambah 8 jam untuk tukar ke Waktu Malaysia (GMT+8)
-        const waktuMY = new Date(utc + (3600000 * 8));
-        
-        // Formatkan kepada HH:MM (Contoh: "21:25")
-        const jam = String(waktuMY.getHours()).padStart(2, '0');
-        const minit = String(waktuMY.getMinutes()).padStart(2, '0');
-        const waktuMalaysia = `${jam}:${minit}`;
+        // Bersihkan sebarang whitespace atau simbol pelik (Contoh hasil: "21:25")
+        const waktuMalaysia = stringWaktuMY.trim();
 
         console.log(`[SERVER LOG] Memproses push pada waktu MY: ${waktuMalaysia} - Mesej: ${message}`);
 
@@ -32,16 +31,11 @@ export default async function handler(req, res) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
-                // Menggunakan Authorization 'Basic' dan mengambil key selamat dari environment variable Vercel
                 "Authorization": `Basic ${process.env.ONESIGNAL_API_KEY}`
             },
             body: JSON.stringify({
-                // Menggunakan App ID secara dinamik dari Environment Variable Vercel
                 app_id: process.env.ONESIGNAL_APP_ID, 
-                
-                // Menggunakan segmen default yang betul untuk OneSignal
                 included_segments: ["Subscribed Users"], 
-                
                 headings: {
                     en: "🕌 MY SOLAT"
                 },
@@ -62,18 +56,14 @@ export default async function handler(req, res) {
         // =========================
         return res.status(200).json({
             success: true,
-            waktu_semakan_my: waktuMalaysia, // Ini akan pulangkan waktu Malaysia yang betul
+            waktu_semakan_my: waktuMalaysia, // Ini wajib akan keluar jam malam Malaysia yang betul!
             message: message,
             onesignal_response: data
         });
 
     } catch (error) {
         console.log("❌ PUSH ERROR:", error);
-
-        // =========================
-        // ERROR RESPONSE
-        // =========================
-       return res.status(500).json({
+        return res.status(500).json({
             success: false,
             error: error.message
         });
