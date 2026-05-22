@@ -1,33 +1,26 @@
 export default async function handler(req, res) {
-    // Membenarkan request dipanggil dari luar (CORS) untuk cron job luar
     res.setHeader('Access-Control-Allow-Origin', '*');
     
     try {
-        // =========================
-        // GET MESSAGE
-        // =========================
+        // 1. Terima mesej dan zon dari request (Kalau tak bagi, default Kedah)
         const message = req.query.message || "Waktu Solat Telah Masuk";
+        const zone = req.query.zone || "kdh01"; 
 
-        // ==========================================
-        // FORCE GMT+8 MALAYSIA TIME (MATEMATIK METHOD)
-        // ==========================================
+        // 2. Ambil masa Malaysia semasa (Matematik Method)
         const masaSekarang = new Date();
-        
-        // Ambil masa UTC semasa (Milisaat) dan tambah dengan 8 jam (8 * 60 * 60 * 1000 milisaat)
         const masaMalaysia = new Date(masaSekarang.getTime() + (8 * 60 * 60 * 1000));
-        
-        // Ekstrak jam dan minit secara berasingan (Pasti dapat waktu Malaysia yang tepat)
         const jam = String(masaMalaysia.getUTCHours()).padStart(2, '0');
         const minit = String(masaMalaysia.getUTCMinutes()).padStart(2, '0');
-        
-        // Hasilnya tetap akan jadi format "15:06" ikut jam semasa kau ketuk
         const waktuMalaysia = `${jam}:${minit}`;
 
-        console.log(`[SERVER LOG] Memproses push pada waktu MY: ${waktuMalaysia} - Mesej: ${message}`);
+        // 3. KLON DATA DARI E-SOLAT (Server Vercel tolong dapatkan jadual zon semasa user)
+        const eSolatReq = await fetch(`https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=today&zone=${zone}`);
+        const dataSolat = await eSolatReq.json();
+        const prayer = dataSolat.prayerTime[0];
 
-        // ==========================================
-        // SEND TO ONESIGNAL (V1 - TOTAL SUBSCRIPTIONS)
-        // ==========================================
+        console.log(`[SERVER LOG] Memproses push zon ${zone} pada waktu MY: ${waktuMalaysia}`);
+
+        // 4. SEND TO ONESIGNAL (Sistem Push Sendiri)
         const response = await fetch("https://onesignal.com/api/v1/notifications", {
             method: "POST",
             headers: {
@@ -36,9 +29,9 @@ export default async function handler(req, res) {
             },
             body: JSON.stringify({
                 app_id: process.env.ONESIGNAL_APP_ID, 
-                included_segments: ["Total Subscriptions"], // <--- SAH TUKAR KE SINI (Sapu bersih semua iPhone kau)
+                included_segments: ["Total Subscriptions"], // Hantar ke peranti
                 headings: {
-                    en: "🕌 MY SOLAT"
+                    en: `🕌 MY SOLAT (${zone.toUpperCase()})`
                 },
                 contents: {
                     en: message
@@ -50,23 +43,23 @@ export default async function handler(req, res) {
         });
 
         const data = await response.json();
-        console.log("✅ ONESIGNAL RESPONSE:", data);
 
-        // =========================
-        // SUCCESS RESPONSE
-        // =========================
         return res.status(200).json({
             success: true,
             waktu_semakan_my: waktuMalaysia, 
+            user_zone: zone,
             message: message,
-            onesignal_response: data
+            onesignal_response: data,
+            jadual_zon_ini: {
+                subuh: prayer.fajr,
+                zohor: prayer.dhuhr,
+                asar: prayer.asr,
+                maghrib: prayer.maghrib,
+                isyak: prayer.isha
+            }
         });
 
     } catch (error) {
-        console.log("❌ PUSH ERROR:", error);
-        return res.status(500).json({
-            success: false,
-            error: error.message
-        });
+        return res.status(500).json({ success: false, error: error.message });
     }
 }
