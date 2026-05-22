@@ -9,21 +9,19 @@ export default async function handler(req, res) {
         const message = req.query.message || "Waktu Solat Telah Masuk";
 
         // ==========================================
-        // FORCE GMT+8 MALAYSIA TIME (KUNCI MATI METHOD)
+        // FORCE GMT+8 MALAYSIA TIME (MATEMATIK METHOD)
         // ==========================================
-        // Ambil masa sekarang dan paksa tukar ke string format Malaysia (Asia/Kuala_Lumpur)
-        const opsiMasa = {
-            timeZone: "Asia/Kuala_Lumpur",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false
-        };
+        const masaSekarang = new Date();
         
-        // Guna Intl.DateTimeFormat (Cara rasmi Node.js untuk lock timezone)
-        const formatMasa = new Intl.DateTimeFormat("ms-MY", opsiMasa).format(new Date());
+        // Ambil masa UTC semasa (Milisaat) dan tambah dengan 8 jam (8 * 60 * 60 * 1000 milisaat)
+        const masaMalaysia = new Date(masaSekarang.getTime() + (8 * 60 * 60 * 1000));
         
-        // Hasilnya akan sentiasa keluar "02:00" (Ikut jam Malaysia sekarang)
-        const waktuMalaysia = formatMasa.replace('.', ':'); 
+        // Ekstrak jam dan minit secara berasingan (Pasti dapat waktu Malaysia yang tepat)
+        const jam = String(masaMalaysia.getUTCHours()).padStart(2, '0');
+        const minit = String(masaMalaysia.getUTCMinutes()).padStart(2, '0');
+        
+        // Hasilnya tetap akan jadi "15:00" ikut minit semasa
+        const waktuMalaysia = `${jam}:${minit}`;
 
         console.log(`[SERVER LOG] Memproses push pada waktu MY: ${waktuMalaysia} - Mesej: ${message}`);
 
