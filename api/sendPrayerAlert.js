@@ -1,327 +1,72 @@
-export default async function handler(
-req,
-res
-){
-
-try{
-
-console.log(
-"🕌 CRON RUNNING..."
-);
-
-
-// =========================
-// MANUAL TEST MODE
-// =========================
-
-if(req.query.message){
-
-const response =
-await fetch(
-
-"https://api.onesignal.com/notifications",
-
-{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":
-"application/json",
-
-Authorization:
-`Basic ${process.env.ONESIGNAL_API_KEY}`
-
-},
-
-body:JSON.stringify({
-
-app_id:
-process.env.ONESIGNAL_APP_ID,
-
-included_segments:[
-"Subscribed Users"
-],
-
-headings:{
-en:"🕌 MY SOLAT"
-},
-
-contents:{
-en:req.query.message
-}
-
-})
-
-}
-
-);
-
-
-const data =
-await response.json();
-
-return res.status(200).json(data);
-
-}
-
-
-// =========================
-// GET PRAYER TIME
-// =========================
-
-const response =
-await fetch(
-
-"https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=today&zone=kdh01"
-
-);
-
-const data =
-await response.json();
-
-const prayer =
-data.prayerTime[0];
-
-
-// =========================
-// CURRENT TIME
-// =========================
-
-const now = new Date();
-
-const hour =
-String(now.getHours())
-.padStart(2,"0");
-
-const minute =
-String(now.getMinutes())
-.padStart(2,"0");
-
-const currentTime =
-`${hour}:${minute}`;
-
-console.log(
-"CURRENT:",
-currentTime
-);
-
-
-// =========================
-// PRAYER LIST
-// =========================
-
-const prayers = [
-
-{
-name:"Subuh",
-time:prayer.fajr.substring(0,5)
-},
-
-{
-name:"Zohor",
-time:prayer.dhuhr.substring(0,5)
-},
-
-{
-name:"Asar",
-time:prayer.asr.substring(0,5)
-},
-
-{
-name:"Maghrib",
-time:prayer.maghrib.substring(0,5)
-},
-
-{
-name:"Isyak",
-time:prayer.isha.substring(0,5)
-}
-
-];
-
-
-// =========================
-// LOOP PRAYER
-// =========================
-
-for (const p of prayers){
-
-const [h,m] =
-p.time.split(":");
-
-
-const prayerDate =
-new Date();
-
-prayerDate.setHours(h);
-prayerDate.setMinutes(m);
-
-
-// =========================
-// REMINDER TIME
-// =========================
-
-const reminderDate =
-new Date(
-prayerDate.getTime() -
-10 * 60000
-);
-
-
-const reminderHour =
-String(
-reminderDate.getHours()
-).padStart(2,"0");
-
-
-const reminderMinute =
-String(
-reminderDate.getMinutes()
-).padStart(2,"0");
-
-
-const reminderTime =
-`${reminderHour}:${reminderMinute}`;
-
-
-
-// =========================
-// 10 MIN REMINDER
-// =========================
-
-if(currentTime === reminderTime){
-
-await fetch(
-
-"https://api.onesignal.com/notifications",
-
-{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":
-"application/json",
-
-Authorization:
-`Basic ${process.env.ONESIGNAL_API_KEY}`
-
-},
-
-body:JSON.stringify({
-
-app_id:
-process.env.ONESIGNAL_APP_ID,
-
-included_segments:[
-"Subscribed Users"
-],
-
-headings:{
-en:"🕌 MY SOLAT"
-},
-
-contents:{
-en:`${p.name} in 10 minutes`
-}
-
-})
-
-}
-
-);
-
-console.log(
-"🔔 REMINDER SENT"
-);
-
-}
-
-
-
-// =========================
-// AZAN TIME
-// =========================
-
-if(currentTime === p.time){
-
-await fetch(
-
-"https://api.onesignal.com/notifications",
-
-{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":
-"application/json",
-
-Authorization:
-`Basic ${process.env.ONESIGNAL_API_KEY}`
-
-},
-
-body:JSON.stringify({
-
-app_id:
-process.env.ONESIGNAL_APP_ID,
-
-included_segments:[
-"Subscribed Users"
-],
-
-headings:{
-en:"🕌 MY SOLAT"
-},
-
-contents:{
-en:`Waktu ${p.name} telah masuk`
-}
-
-})
-
-}
-
-);
-
-console.log(
-"🕌 AZAN SENT"
-);
-
-}
-
-}
-
-
-// =========================
-// SUCCESS
-// =========================
-
-res.status(200).json({
-
-success:true,
-
-time:currentTime
-
-});
-
-}
-
-catch(error){
-
-console.log(error);
-
-res.status(500).json({
-
-error:error.message
-
-});
-
-}
-
+export default async function handler(req, res) {
+    // Membenarkan request dipanggil dari luar (CORS) untuk cron job luar
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    
+    try {
+        // =========================
+        // GET MESSAGE
+        // =========================
+        const message = req.query.message || "Waktu Solat Telah Masuk";
+
+        // ==========================================
+        // FORCE GMT+8 MALAYSIA TIME (MATEMATIK METHOD)
+        // ==========================================
+        const masaSekarang = new Date();
+        
+        // Ambil masa UTC semasa (Milisaat) dan tambah dengan 8 jam (8 * 60 * 60 * 1000 milisaat)
+        const masaMalaysia = new Date(masaSekarang.getTime() + (8 * 60 * 60 * 1000));
+        
+        // Ekstrak jam dan minit secara berasingan (Pasti dapat waktu Malaysia yang tepat)
+        const jam = String(masaMalaysia.getUTCHours()).padStart(2, '0');
+        const minit = String(masaMalaysia.getUTCMinutes()).padStart(2, '0');
+        
+        // Hasilnya tetap akan jadi "15:00" ikut minit semasa
+        const waktuMalaysia = `${jam}:${minit}`;
+
+        console.log(`[SERVER LOG] Memproses push pada waktu MY: ${waktuMalaysia} - Mesej: ${message}`);
+
+        // =========================
+        // SEND TO ONESIGNAL (V1)
+        // =========================
+        const response = await fetch("https://onesignal.com/api/v1/notifications", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                "Authorization": `Basic ${process.env.ONESIGNAL_API_KEY}`
+            },
+            body: JSON.stringify({
+                app_id: process.env.ONESIGNAL_APP_ID, 
+                included_segments: ["Subscribed Users"], 
+                headings: {
+                    en: "🕌 MY SOLAT"
+                },
+                contents: {
+                    en: message
+                },
+                ios_sound: "default",
+                chrome_web_icon: "https://solatmys.vercel.app/icon-192.png",
+                large_icon: "https://solatmys.vercel.app/icon-512.png"
+            })
+        });
+
+        const data = await response.json();
+        console.log("✅ ONESIGNAL RESPONSE:", data);
+
+        // =========================
+        // SUCCESS RESPONSE
+        // =========================
+        return res.status(200).json({
+            success: true,
+            waktu_semakan_my: waktuMalaysia, 
+            message: message,
+            onesignal_response: data
+        });
+
+    } catch (error) {
+        console.log("❌ PUSH ERROR:", error);
+        return res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
 }
