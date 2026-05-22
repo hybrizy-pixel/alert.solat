@@ -20,14 +20,14 @@ export default async function handler(req, res) {
         const jam = String(masaMalaysia.getUTCHours()).padStart(2, '0');
         const minit = String(masaMalaysia.getUTCMinutes()).padStart(2, '0');
         
-        // Hasilnya tetap akan jadi "15:00" ikut minit semasa
+        // Hasilnya tetap akan jadi format "15:06" ikut jam semasa kau ketuk
         const waktuMalaysia = `${jam}:${minit}`;
 
         console.log(`[SERVER LOG] Memproses push pada waktu MY: ${waktuMalaysia} - Mesej: ${message}`);
 
-        // =========================
-        // SEND TO ONESIGNAL (V1)
-        // =========================
+        // ==========================================
+        // SEND TO ONESIGNAL (V1 - TOTAL SUBSCRIPTIONS)
+        // ==========================================
         const response = await fetch("https://onesignal.com/api/v1/notifications", {
             method: "POST",
             headers: {
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
             },
             body: JSON.stringify({
                 app_id: process.env.ONESIGNAL_APP_ID, 
-                included_segments: ["Subscribed Users"], 
+                included_segments: ["Total Subscriptions"], // <--- SAH TUKAR KE SINI (Sapu bersih semua iPhone kau)
                 headings: {
                     en: "🕌 MY SOLAT"
                 },
