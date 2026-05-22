@@ -324,4 +324,163 @@ function highlightPrayer() {
         Isyak: "isha"
     };
 
-    const id = prayerMap
+    const id = prayerMap[nextPrayer.name];
+    const element = document.getElementById(id);
+    if (element) {
+        element.parentElement.classList.add("active-prayer");
+    }
+}
+
+// =========================
+// PLAY AZAN
+// =========================
+function playAzan(prayerName) {
+    let audioFile = "azan.mp3";
+    if (prayerName === "Subuh") {
+        audioFile = "azan-subuh.mp3";
+    }
+
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+    }
+
+    currentAudio = new Audio(audioFile);
+    currentAudio.volume = 1.0;
+    currentAudio.play().catch(() => {});
+}
+
+// =========================
+// ENABLE NOTIFICATION
+// =========================
+async function enableNotification() {
+    try {
+        await OneSignal.Notifications.requestPermission();
+        setTimeout(async () => {
+            const subscriptionId = await OneSignal.User.PushSubscription.getIdAsync();
+            if (subscriptionId) {
+                notificationEnabled = true;
+                console.log("SUBSCRIPTION ID:", subscriptionId);
+                alert(`✅ CONNECTED\n\n${subscriptionId}`);
+            } else {
+                alert("❌ Subscription Failed");
+            }
+        }, 3000);
+    } catch (error) {
+        console.log(error);
+        alert(`ERROR: ${error.message}`);
+    }
+}
+
+// =========================
+// TEST NOTIFICATION
+// =========================
+async function testNotification() {
+    try {
+        playAzan("Maghrib");
+        await fetch(`/api/sendPrayerAlert?zone=${currentZone}&message=TEST PUSH`);
+        alert("✅ Push Sent");
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// =========================
+// CHECK PRAYER ALERTS (CLIENT TRIGGER)
+// =========================
+function checkPrayerAlerts() {
+    if (!prayerTimes.fajr) return;
+    const now = new Date();
+    const localTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kuala_Lumpur" }));
+    
+    const currentTime = `${String(localTime.getHours()).padStart(2, "0")}:${String(localTime.getMinutes()).padStart(2, "0")}`;
+
+    const prayers = [
+        { name: "Subuh", time: prayerTimes.fajr },
+        { name: "Zohor", time: prayerTimes.dhuhr },
+        { name: "Asar", time: prayerTimes.asr },
+        { name: "Maghrib", time: prayerTimes.maghrib },
+        { name: "Isyak", time: prayerTimes.isha }
+    ];
+
+    prayers.forEach(prayer => {
+        const [hour, minute] = prayer.time.split(":").map(Number);
+
+        // 10 MIN BEFORE
+        const before = new Date(localTime);
+        before.setHours(hour);
+        before.setMinutes(minute - 10);
+        const beforeTime = `${String(before.getHours()).padStart(2, "0")}:${String(before.getMinutes()).padStart(2, "0")}`;
+
+        if (currentTime === beforeTime && lastNotification !== `${prayer.name}-before`) {
+            lastNotification = `${prayer.name}-before`;
+            alert(`🕌 ${prayer.name} Lagi 10 Minit`);
+            fetch(`/api/sendPrayerAlert?zone=${currentZone}&message=${encodeURIComponent(prayer.name + ' Lagi 10 Minit')}`);
+        }
+
+        // EXACT PRAYER TIME
+        if (currentTime === prayer.time && lastNotification !== prayer.name) {
+            lastNotification = prayer.name;
+            playAzan(prayer.name);
+            alert(`🕌 Waktu ${prayer.name} Telah Masuk`);
+            fetch(`/api/sendPrayerAlert?zone=${currentZone}&message=${encodeURIComponent('Waktu Solat ' + prayer.name + ' Telah Masuk')}`);
+        }
+    });
+}
+
+// =========================
+// ISLAMIC EVENT COUNTDOWN
+// =========================
+async function updateIslamicCountdown() {
+    try {
+        const response = await fetch("https://api.aladhan.com/v1/gToH");
+        const data = await response.json();
+        const hijri = data.data.hijri;
+
+        const currentMonth = parseInt(hijri.month.number);
+        const currentDay = parseInt(hijri.day);
+        let ramadhanDays = 0;
+
+        if (currentMonth < 9) {
+            ramadhanDays = (9 - currentMonth) * 30 - currentDay;
+        } else if (currentMonth === 9) {
+            ramadhanDays = 0;
+        } else {
+            ramadhanDays = (12 - currentMonth + 9) * 30 - currentDay;
+        }
+
+        const rayaDays = ramadhanDays + 30;
+        let hajiDays = 0;
+
+        if (currentMonth < 12) {
+            hajiDays = (12 - currentMonth) * 30 - currentDay + 10;
+        } else {
+            hajiDays = 10 - currentDay;
+            if (hajiDays < 0) hajiDays = 0;
+        }
+
+        document.getElementById("ramadhan-countdown").innerHTML = `🌙 Ramadan • ${ramadhanDays} Hari Lagi`;
+        document.getElementById("aidilfitri-countdown").innerHTML = `🎉 Aidilfitri • ${rayaDays} Hari Lagi`;
+        document.getElementById("aidiladha-countdown").innerHTML = `🐄 Aidiladha • ${hajiDays} Hari Lagi`;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// =========================
+// INIT (SUSUNAN BARU)
+// =========================
+console.log("✅ SCRIPT LOADED");
+updateClock();
+setInterval(updateClock, 1000);
+loadHijriDate();
+
+// 1. Tarik data waktu solat terus (Guna default kdh01 dulu biar skrin tak kosong)
+loadPrayerTimes(); 
+
+// 2. Baru panggil GPS secara senyap di background untuk auto-update zon
+getLocation(); 
+
+startCountdown();
+updateIslamicCountdown();
+setInterval(checkPrayerAlerts, 30000);
