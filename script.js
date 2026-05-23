@@ -104,7 +104,6 @@ const zoneMap = {
 function updateClock() {
     const now = new Date();
 
-    // Lock terus jam skrin utama ke Asia/Kuala_Lumpur
     const malaysiaTime = now.toLocaleTimeString("en-GB", {
         timeZone: "Asia/Kuala_Lumpur",
         hour12: false
@@ -171,20 +170,14 @@ async function getLocation() {
 
                 let detectedZone = null;
 
-                // 1. Cuba check nama bandar/daerah
                 if (zoneMap[cityLower]) {
                     detectedZone = zoneMap[cityLower];
-                } 
-                // 2. Cuba check nama mukim/suburb
-                else if (zoneMap[suburbLower]) {
+                } else if (zoneMap[suburbLower]) {
                     detectedZone = zoneMap[suburbLower];
-                }
-                // 3. Fallback nama negeri
-                else if (zoneMap[stateLower]) {
+                } else if (zoneMap[stateLower]) {
                     detectedZone = zoneMap[stateLower];
                 }
 
-                // Tukar zon kalau sistem kesan tempat baru semasa travel
                 if (detectedZone && detectedZone !== currentZone) {
                     currentZone = detectedZone;
                     console.log(`[LOKASI BARU] Sistem menukar zon solat ke: ${currentZone}`);
@@ -206,7 +199,7 @@ async function getLocation() {
 }
 
 // =========================
-// LOAD PRAYER TIME
+// LOAD PRAYER TIME + AUTO TAG
 // =========================
 async function loadPrayerTimes() {
     try {
@@ -233,6 +226,15 @@ async function loadPrayerTimes() {
         document.getElementById("isha").innerHTML = prayerTimes.isha;
 
         updateNextPrayer();
+
+        // MAGIK AUTOMATIK: Ikat zon lokasi telefon ke akaun OneSignal user untuk target push notification luar kawasan
+        if (window.OneSignalDeferred) {
+            OneSignalDeferred.push(function(OneSignal) {
+                OneSignal.User.addTag("user_zone", currentZone);
+                console.log(`[ONESIGNAL] Tag zon berjaya didaftarkan: ${currentZone}`);
+            });
+        }
+
     } catch (error) {
         console.log(error);
     }
@@ -347,7 +349,9 @@ function playAzan(prayerName) {
 
     currentAudio = new Audio(audioFile);
     currentAudio.volume = 1.0;
-    currentAudio.play().catch(() => {});
+    currentAudio.play().catch((e) => {
+        console.log("Audio disekat automatik oleh browser:", e);
+    });
 }
 
 // =========================
@@ -386,13 +390,12 @@ async function testNotification() {
 }
 
 // =========================
-// CHECK PRAYER ALERTS (CLIENT TRIGGER)
+// CHECK PRAYER ALERTS (AUTO LAUNCH ON PUSH CLICK)
 // =========================
 function checkPrayerAlerts() {
     if (!prayerTimes.fajr) return;
     const now = new Date();
     const localTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kuala_Lumpur" }));
-    
     const currentTime = `${String(localTime.getHours()).padStart(2, "0")}:${String(localTime.getMinutes()).padStart(2, "0")}`;
 
     const prayers = [
@@ -406,7 +409,7 @@ function checkPrayerAlerts() {
     prayers.forEach(prayer => {
         const [hour, minute] = prayer.time.split(":").map(Number);
 
-        // 10 MIN BEFORE
+        // Semakan 10 minit sebelum solat masuk
         const before = new Date(localTime);
         before.setHours(hour);
         before.setMinutes(minute - 10);
@@ -415,15 +418,13 @@ function checkPrayerAlerts() {
         if (currentTime === beforeTime && lastNotification !== `${prayer.name}-before`) {
             lastNotification = `${prayer.name}-before`;
             alert(`🕌 ${prayer.name} Lagi 10 Minit`);
-            fetch(`/api/sendPrayerAlert?zone=${currentZone}&message=${encodeURIComponent(prayer.name + ' Lagi 10 Minit')}`);
         }
 
-        // EXACT PRAYER TIME
+        // Semakan sewaktu azan masuk ngam-ngam
         if (currentTime === prayer.time && lastNotification !== prayer.name) {
             lastNotification = prayer.name;
             playAzan(prayer.name);
-            alert(`🕌 Waktu ${prayer.name} Telah Masuk`);
-            fetch(`/api/sendPrayerAlert?zone=${currentZone}&message=${encodeURIComponent('Waktu Solat ' + prayer.name + ' Telah Masuk')}`);
+            alert(`🕌 Waktu Solat ${prayer.name} Telah Masuk`);
         }
     });
 }
@@ -475,12 +476,19 @@ updateClock();
 setInterval(updateClock, 1000);
 loadHijriDate();
 
-// 1. Tarik data waktu solat terus (Guna default kdh01 dulu biar skrin tak kosong)
-loadPrayerTimes(); 
+async function initApp() {
+    // 1. Tarik data waktu solat & hantar tag OneSignal
+    await loadPrayerTimes(); 
 
-// 2. Baru panggil GPS secara senyap di background untuk auto-update zon
-getLocation(); 
+    // 2. Panggil GPS secara senyap di background untuk auto-update zon solat
+    getLocation(); 
 
-startCountdown();
-updateIslamicCountdown();
-setInterval(checkPrayerAlerts, 30000);
+    startCountdown();
+    updateIslamicCountdown();
+
+    // 3. Semak jika app dibuka ngam-ngam pada waktu solat untuk dicetuskan azan
+    checkPrayerAlerts();
+    setInterval(checkPrayerAlerts, 20000); // Check berkala setiap 20 saat secara dalaman
+}
+
+initApp();
