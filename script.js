@@ -25,6 +25,33 @@ let currentZone = "kdh01"; // Default Kedah (Jitra/Alor Setar)
 let lastCity = "";
 
 // =========================
+// AUDIO UNLOCK
+// =========================
+let audioUnlocked = false;
+
+document.addEventListener("click", () => {
+
+    if (!audioUnlocked) {
+
+        const unlockAudio = new Audio();
+
+        unlockAudio.play().catch(() => {});
+
+        // PRELOAD AUDIO
+        const preload1 = new Audio("azan.mp3");
+        preload1.load();
+
+        const preload2 = new Audio("azan-subuh.mp3");
+        preload2.load();
+
+        audioUnlocked = true;
+
+        console.log("🔓 Audio unlocked");
+
+    }
+
+});
+// =========================
 // ZONE MAP (SELURUH MALAYSIA)
 // =========================
 const zoneMap = {
@@ -375,7 +402,34 @@ async function enableNotification() {
         alert(`ERROR: ${error.message}`);
     }
 }
+// =========================
+// TOGGLE MUTE
+// =========================
+function toggleMute() {
 
+    const muteBtn = document.getElementById("mute-btn");
+
+    let isMuted = localStorage.getItem("azanMuted") === "true";
+
+    isMuted = !isMuted;
+
+    localStorage.setItem("azanMuted", isMuted);
+
+    if (isMuted) {
+
+        muteBtn.innerHTML = "🔇 Muted";
+
+        if (currentAudio) {
+            currentAudio.pause();
+        }
+
+    } else {
+
+        muteBtn.innerHTML = "🔊 Sound ON";
+
+    }
+
+}
 // =========================
 // TEST NOTIFICATION
 // =========================
@@ -489,6 +543,18 @@ async function initApp() {
     // 3. Semak jika app dibuka ngam-ngam pada waktu solat untuk dicetuskan azan
     checkPrayerAlerts();
     setInterval(checkPrayerAlerts, 20000); // Check berkala setiap 20 saat secara dalaman
+    
+    document.addEventListener("visibilitychange", () => {
+
+    if (!document.hidden) {
+
+        console.log("📱 App aktif semula");
+
+        checkPrayerAlerts();
+
+    }
+
+});
 }
 
 initApp();
