@@ -21,38 +21,108 @@ let nextPrayer = null;
 let notificationEnabled = false;
 let lastNotification = "";
 let currentAudio = null;
-let currentZone = "kdh01";
+let currentZone = "kdh01"; // Default Kedah (Jitra/Alor Setar)
 let lastCity = "";
 
 // =========================
-// ZONE MAP
+// AUDIO UNLOCK
+// =========================
+let audioUnlocked = false;
+
+document.addEventListener("click", () => {
+
+    if (!audioUnlocked) {
+
+        const unlockAudio = new Audio();
+
+        unlockAudio.play().catch(() => {});
+
+        // PRELOAD AUDIO
+        const preload1 = new Audio("azan.mp3");
+        preload1.load();
+
+        const preload2 = new Audio("azan-subuh.mp3");
+        preload2.load();
+
+        audioUnlocked = true;
+
+        console.log("🔓 Audio unlocked");
+
+    }
+
+});
+// =========================
+// ZONE MAP (SELURUH MALAYSIA)
 // =========================
 const zoneMap = {
-    "jitra": "kdh01",
-    "kubang pasu": "kdh01",
-    "alor setar": "kdh01",
-    "pokok sena": "kdh01",
-    "sungai petani": "kdh02",
-    "pendang": "kdh02",
-    "yan": "kdh02",
-    "sik": "kdh03",
-    "padang terap": "kdh03",
+    // PERLIS
+    "perlis": "pls01", "arau": "pls01", "kangar": "pls01", "padang besar": "pls01",
+
+    // KEDAH
+    "kubang pasu": "kdh01", "jitra": "kdh01", "alor setar": "kdh01", "pokok sena": "kdh01",
+    "kuala muda": "kdh02", "sungai petani": "kdh02", "pendang": "kdh02", "yan": "kdh02",
+    "padang terap": "kdh03", "sik": "kdh03",
     "baling": "kdh04",
-    "kulim": "kdh05",
-    "bandar baharu": "kdh05",
+    "kulim": "kdh05", "bandar baharu": "kdh05",
     "langkawi": "kdh06",
-    "george town": "png01",
-    "penang": "png01",
-    "bangi": "sgr01",
-    "kajang": "sgr01",
-    "shah alam": "sgr01",
-    "kuala lumpur": "wly01",
-    "putrajaya": "wly01",
-    "johor bahru": "jhr02",
-    "kulai": "jhr02",
-    "muar": "jhr04",
-    "seremban": "ngr01",
-    "ipoh": "prk02"
+
+    // PULAU PINANG
+    "pulau pinang": "png01", "penang": "png01", "george town": "png01", "seberang perai": "png01",
+
+    // PERAK
+    "grik": "prk01", "ulu perak": "prk01",
+    "ipoh": "prk02", "batu gajah": "prk02", "kampar": "prk02", "kuala kangsar": "prk02",
+    "manjung": "prk03", "lumut": "prk03", "sitiawan": "prk03",
+    "larut": "prk04", "matang": "prk04", "selama": "prk04", "taiping": "prk04",
+    "bagan datuk": "prk05", "teluk intan": "prk05", "hilir perak": "prk05",
+    "muallim": "prk06", "tanjung malim": "prk06",
+    "selama": "prk07",
+
+    // SELANGOR & WILAYAH
+    "kuala lumpur": "wly01", "putrajaya": "wly01",
+    "hulu selangor": "sgr01",
+    "gombak": "sgr02", "petaling": "sgr02", "shah alam": "sgr02", "subang jaya": "sgr02", "klang": "sgr02",
+    "kuala selangor": "sgr03",
+    "hulu langat": "sgr04", "kajang": "sgr04", "bangi": "sgr04", "ampang": "sgr04",
+    "sabak bernam": "sgr05",
+    "kuala langat": "sgr06",
+    "sepang": "sgr07", "cyberjaya": "sgr07",
+
+    // NEGERI SEMBILAN
+    "seremban": "ngr01", "port didson": "ngr01",
+    "jempol": "ngr02", "kuala pilah": "ngr02",
+
+    // MELAKA
+    "melaka": "mlk01", "alor gajah": "mlk01", "jasin": "mlk01",
+
+    // JOHOR
+    "pulau aur": "jhr01", "pulau pemanggil": "jhr01",
+    "johor bahru": "jhr02", "kulai": "jhr02", "pontian": "jhr02",
+    "kluang": "jhr03", "batu pahat": "jhr03",
+    "muar": "jhr04", "ledang": "jhr04", "tangkak": "jhr04", "sega mat": "jhr04",
+    "mersing": "jhr05",
+    "kota tinggi": "jhr06",
+
+    // PAHANG
+    "kuantan": "phg01", "pekan": "phg01",
+    "rompin": "phg02",
+    "bentong": "phg03", "raub": "phg03", "lipis": "phg03",
+    "jerantut": "phg04", "temerloh": "phg05", "maran": "phg05",
+    "cameron highlands": "phg06",
+
+    // TERENGGANU
+    "kuala terennganu": "trg01", "marang": "trg01",
+    "besut": "trg02", "setiu": "trg02",
+    "hulu terengganu": "trg03",
+    "kemaman": "trg04", "dungun": "trg04",
+
+    // KELANTAN
+    "kota bharu": "ktn01", "bachok": "ktn01", "pasir puteh": "ktn01",
+    "jeli": "ktn02", "kuala krai": "ktn02", "gua musang": "ktn02",
+
+    // SABAH & SARAWAK
+    "sabah": "sbh01", "kota kinabalu": "sbh01",
+    "sarawak": "swk01", "kuching": "swk01"
 };
 
 // =========================
@@ -61,7 +131,6 @@ const zoneMap = {
 function updateClock() {
     const now = new Date();
 
-    // Lock terus jam skrin utama ke Asia/Kuala_Lumpur
     const malaysiaTime = now.toLocaleTimeString("en-GB", {
         timeZone: "Asia/Kuala_Lumpur",
         hour12: false
@@ -98,7 +167,7 @@ async function loadHijriDate() {
 }
 
 // =========================
-// GET LOCATION
+// GET LOCATION (SMART FALLBACK)
 // =========================
 async function getLocation() {
     if (!navigator.geolocation) return;
@@ -112,39 +181,52 @@ async function getLocation() {
             try {
                 const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
                 const data = await response.json();
-                const city = data.address.city || data.address.town || data.address.village || data.address.county || "Malaysia";
+                
+                const city = data.address.city || data.address.town || data.address.village || data.address.county || "";
                 const state = data.address.state || "";
+                const suburb = data.address.suburb || "";
 
-                document.getElementById("location").innerHTML = `📍 ${city}, ${state}`;
+                document.getElementById("location").innerHTML = `📍 ${city || suburb || 'Malaysia'}, ${state}`;
 
-                const cityLower = city.toLowerCase();
-                if (cityLower === lastCity) return;
+                const cityLower = city.toLowerCase().trim();
+                const stateLower = state.toLowerCase().trim();
+                const suburbLower = suburb.toLowerCase().trim();
+
+                if (cityLower === lastCity && cityLower !== "") return;
                 lastCity = cityLower;
 
+                let detectedZone = null;
+
                 if (zoneMap[cityLower]) {
-                    const newZone = zoneMap[cityLower];
-                    if (newZone !== currentZone) {
-                        currentZone = newZone;
-                        loadPrayerTimes();
-                    }
+                    detectedZone = zoneMap[cityLower];
+                } else if (zoneMap[suburbLower]) {
+                    detectedZone = zoneMap[suburbLower];
+                } else if (zoneMap[stateLower]) {
+                    detectedZone = zoneMap[stateLower];
+                }
+
+                if (detectedZone && detectedZone !== currentZone) {
+                    currentZone = detectedZone;
+                    console.log(`[LOKASI BARU] Sistem menukar zon solat ke: ${currentZone}`);
+                    loadPrayerTimes();
                 }
             } catch (error) {
-                console.log(error);
+                console.log("Ralat deteksi lokasi:", error);
             }
         },
         (error) => {
-            console.log(error);
+            console.log("GPS Error:", error);
         },
         {
             enableHighAccuracy: false,
-            timeout: 5000,
+            timeout: 8000,
             maximumAge: 600000
         }
     );
 }
 
 // =========================
-// LOAD PRAYER TIME
+// LOAD PRAYER TIME + AUTO TAG
 // =========================
 async function loadPrayerTimes() {
     try {
@@ -171,6 +253,15 @@ async function loadPrayerTimes() {
         document.getElementById("isha").innerHTML = prayerTimes.isha;
 
         updateNextPrayer();
+
+        // MAGIK AUTOMATIK: Ikat zon lokasi telefon ke akaun OneSignal user untuk target push notification luar kawasan
+        if (window.OneSignalDeferred) {
+            OneSignalDeferred.push(function(OneSignal) {
+                OneSignal.User.addTag("user_zone", currentZone);
+                console.log(`[ONESIGNAL] Tag zon berjaya didaftarkan: ${currentZone}`);
+            });
+        }
+
     } catch (error) {
         console.log(error);
     }
@@ -183,7 +274,6 @@ function updateNextPrayer() {
     if (!prayerTimes.fajr) return;
     const now = new Date();
     
-    // Guna timezone Malaysia untuk mengira minit semasa
     const localTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kuala_Lumpur" }));
     const currentMinutes = localTime.getHours() * 60 + localTime.getMinutes();
 
@@ -286,7 +376,9 @@ function playAzan(prayerName) {
 
     currentAudio = new Audio(audioFile);
     currentAudio.volume = 1.0;
-    currentAudio.play().catch(() => {});
+    currentAudio.play().catch((e) => {
+        console.log("Audio disekat automatik oleh browser:", e);
+    });
 }
 
 // =========================
@@ -310,14 +402,41 @@ async function enableNotification() {
         alert(`ERROR: ${error.message}`);
     }
 }
+// =========================
+// TOGGLE MUTE
+// =========================
+function toggleMute() {
 
+    const muteBtn = document.getElementById("mute-btn");
+
+    let isMuted = localStorage.getItem("azanMuted") === "true";
+
+    isMuted = !isMuted;
+
+    localStorage.setItem("azanMuted", isMuted);
+
+    if (isMuted) {
+
+        muteBtn.innerHTML = "🔇 Muted";
+
+        if (currentAudio) {
+            currentAudio.pause();
+        }
+
+    } else {
+
+        muteBtn.innerHTML = "🔊 Sound ON";
+
+    }
+
+}
 // =========================
 // TEST NOTIFICATION
 // =========================
 async function testNotification() {
     try {
         playAzan("Maghrib");
-        await fetch(`/api/sendPrayerAlert?message=TEST PUSH`);
+        await fetch(`/api/sendPrayerAlert?zone=${currentZone}&message=TEST PUSH`);
         alert("✅ Push Sent");
     } catch (error) {
         console.log(error);
@@ -325,13 +444,12 @@ async function testNotification() {
 }
 
 // =========================
-// CHECK PRAYER ALERTS
+// CHECK PRAYER ALERTS (AUTO LAUNCH ON PUSH CLICK)
 // =========================
 function checkPrayerAlerts() {
     if (!prayerTimes.fajr) return;
     const now = new Date();
     const localTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kuala_Lumpur" }));
-    
     const currentTime = `${String(localTime.getHours()).padStart(2, "0")}:${String(localTime.getMinutes()).padStart(2, "0")}`;
 
     const prayers = [
@@ -345,7 +463,7 @@ function checkPrayerAlerts() {
     prayers.forEach(prayer => {
         const [hour, minute] = prayer.time.split(":").map(Number);
 
-        // 10 MIN BEFORE
+        // Semakan 10 minit sebelum solat masuk
         const before = new Date(localTime);
         before.setHours(hour);
         before.setMinutes(minute - 10);
@@ -354,15 +472,13 @@ function checkPrayerAlerts() {
         if (currentTime === beforeTime && lastNotification !== `${prayer.name}-before`) {
             lastNotification = `${prayer.name}-before`;
             alert(`🕌 ${prayer.name} Lagi 10 Minit`);
-            fetch(`/api/sendPrayerAlert?message=${prayer.name} Lagi 10 Minit`);
         }
 
-        // EXACT PRAYER TIME
+        // Semakan sewaktu azan masuk ngam-ngam
         if (currentTime === prayer.time && lastNotification !== prayer.name) {
             lastNotification = prayer.name;
             playAzan(prayer.name);
-            alert(`🕌 Waktu ${prayer.name} Telah Masuk`);
-            fetch(`/api/sendPrayerAlert?message=Waktu ${prayer.name} Telah Masuk`);
+            alert(`🕌 Waktu Solat ${prayer.name} Telah Masuk`);
         }
     });
 }
@@ -407,14 +523,38 @@ async function updateIslamicCountdown() {
 }
 
 // =========================
-// INIT
+// INIT (SUSUNAN BARU)
 // =========================
 console.log("✅ SCRIPT LOADED");
 updateClock();
 setInterval(updateClock, 1000);
 loadHijriDate();
-getLocation();
-loadPrayerTimes();
-startCountdown();
-updateIslamicCountdown();
-setInterval(checkPrayerAlerts, 30000);
+
+async function initApp() {
+    // 1. Tarik data waktu solat & hantar tag OneSignal
+    await loadPrayerTimes(); 
+
+    // 2. Panggil GPS secara senyap di background untuk auto-update zon solat
+    getLocation(); 
+
+    startCountdown();
+    updateIslamicCountdown();
+
+    // 3. Semak jika app dibuka ngam-ngam pada waktu solat untuk dicetuskan azan
+    checkPrayerAlerts();
+    setInterval(checkPrayerAlerts, 20000); // Check berkala setiap 20 saat secara dalaman
+    
+    document.addEventListener("visibilitychange", () => {
+
+    if (!document.hidden) {
+
+        console.log("📱 App aktif semula");
+
+        checkPrayerAlerts();
+
+    }
+
+});
+}
+
+initApp();

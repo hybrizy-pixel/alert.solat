@@ -1,376 +1,219 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>MY SOLAT</title>
 
-<meta charset="UTF-8"/>
+    <link rel="manifest" href="manifest.json"/>
+    <meta name="theme-color" content="#000000"/>
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
-/>
+    <link rel="apple-touch-icon" href="icon-192.png"/>
 
-<title>
-MY SOLAT
-</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
 
-<!-- =========================
-PWA
-========================= -->
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700;800&display=swap" rel="stylesheet">
 
-<link
-rel="manifest"
-href="manifest.json"
-/>
+    <link rel="stylesheet" href="style.css"/>
 
-<meta
-name="theme-color"
-content="#000000"
-/>
-
-
-<!-- =========================
-ICONS
-========================= -->
-
-<link
-rel="apple-touch-icon"
-href="icon-192.png"
-/>
-
-
-<!-- =========================
-GOOGLE FONT
-========================= -->
-
-<link
-href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;800;900&display=swap"
-rel="stylesheet"
-/>
-
-
-<!-- =========================
-CSS
-========================= -->
-
-<link
-rel="stylesheet"
-href="style.css"
-/>
-
-
-<!-- =========================
-ONESIGNAL
-========================= -->
-
-<script
-src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
-defer
-></script>
-
-<script>
-
-window.OneSignalDeferred =
-window.OneSignalDeferred || [];
-
-OneSignalDeferred.push(
-async function(OneSignal){
-
-await OneSignal.init({
-
-appId:
-"399a4625-3fc2-47fd-b4a7-5e50c5542f53",
-
-notifyButton:{
-enable:false
-},
-
-allowLocalhostAsSecureOrigin:true
-
-});
-
-window.OneSignal = OneSignal;
-
-console.log(
-"✅ OneSignal Ready"
-);
-
-}
-);
-
-</script>
-
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function(OneSignal){
+            await OneSignal.init({
+                appId: "399a4625-3fc2-47fd-b4a7-5e50c5542f53",
+                notifyButton:{ enable:false },
+                allowLocalhostAsSecureOrigin:true
+            });
+            window.OneSignal = OneSignal;
+            console.log("✅ OneSignal Ready");
+        });
+    </script>
 </head>
-
 
 <body>
 
-<div class="app">
+    <audio id="azan-audio" src="azan.mp3"></audio>
+<div id="dynamic-island" class="island-hidden">
+        <div class="island-content">
+            <div class="island-left">
+                <span class="island-icon">🇲🇾</span>
+                <div class="island-text">
+            </div>
+        </div>
+    </div>
+    <div class="app">
 
+        <div class="header">
+            <h1>🕌 MY SOLAT</h1>
 
-<!-- =========================
-HEADER
-========================= -->
+            <div class="dual-clock">
+                <div class="clock-box malaysia-clock">
+                    <div class="clock-label">🇲🇾 MALAYSIA</div>
+                    <div id="current-time">00:00:00</div>
+                </div>
 
-<div class="header">
+                <div class="clock-box mekah-clock">
+                    <div class="clock-label">🇸🇦 MEKAH</div>
+                    <div id="mekah-time">00:00:00</div>
+                </div>
+            </div>
 
-<h1>
-🕌 MY SOLAT
-</h1>
+            <div class="info-panel">
 
+<div class="info-row">
 
-<!-- =========================
-DUAL CLOCK
-========================= -->
-
-<div class="dual-clock">
-
-<div class="clock-box malaysia-clock">
-
-<div class="clock-label">
-🇲🇾 MALAYSIA
-</div>
-
-<div id="current-time">
-00:00:00
-</div>
-
-</div>
-
-
-<div class="clock-box mekah-clock">
-
-<div class="clock-label">
-🇸🇦 MEKAH
-</div>
-
-<div id="mekah-time">
-00:00:00
-</div>
-
-</div>
-
-</div>
-
-
-<div id="date">
+<div class="info-box" id="date">
 Loading...
 </div>
 
-<div id="hijri-date">
-Loading...
-</div>
-
-<div id="location">
+<div class="info-box" id="hijri-date">
 Loading...
 </div>
 
 </div>
 
+<div class="info-box location-box" id="location">
+Loading...
+</div>
 
-<!-- =========================
-NEXT PRAYER
-========================= -->
+ </div>
 
-<div class="next-prayer-card">
-
-<h2>
-WAKTU SOLAT SETERUSNYA
+        <div class="next-prayer-card">
+<h2 class="next-prayer-label">
+    WAKTU SOLAT SETERUSNYA
 </h2>
 
-<div id="next-prayer">
-LOADING...
-</div>
-
-
-<div class="countdown">
-
-<div class="time-box">
-
-<span id="hours">
-00
-</span>
-
-<small>
-JAM
-</small>
-
-</div>
-
-
-<div class="time-box">
-
-<span id="minutes">
-00
-</span>
-
-<small>
-MINIT
-</small>
-
-</div>
-
-
-<div class="time-box">
-
-<span id="seconds">
-00
-</span>
-
-<small>
-SAAT
-</small>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- =========================
-PRAYER TIMES
-========================= -->
-
-<div class="prayer-times">
-
-<h2>
-🕋 WAKTU SOLAT
 </h2>
+            <div id="next-prayer">LOADING...</div>
+
+            <div class="countdown">
+                <div class="time-box">
+                    <span id="hours">00</span>
+                    <small>JAM</small>
+                </div>
+
+                <div class="time-box">
+                    <span id="minutes">00</span>
+                    <small>MINIT</small>
+                </div>
+
+                <div class="time-box">
+                    <span id="seconds">00</span>
+                    <small>SAAT</small>
+                </div>
+            </div>
+        </div>
+
+    <div class="prayer-times">
 
 
-<div class="prayer-row">
-<span>IMSAK</span>
-<span id="imsak">--:--</span>
+<div class="prayer-title">
+    🕌 WAKTU SOLAT
 </div>
 
-<div class="prayer-row">
-<span>SUBUH</span>
-<span id="fajr">--:--</span>
-</div>
+            <div class="prayer-row">
+                <span>IMSAK</span>
+                <span id="imsak">--:--</span>
+            </div>
 
-<div class="prayer-row">
-<span>SYURUK</span>
-<span id="syuruk">--:--</span>
-</div>
+            <div class="prayer-row">
+                <span>SUBUH</span>
+                <span id="fajr">--:--</span>
+            </div>
 
-<div class="prayer-row">
-<span>ZOHOR</span>
-<span id="dhuhr">--:--</span>
-</div>
+            <div class="prayer-row">
+                <span>SYURUK</span>
+                <span id="syuruk">--:--</span>
+            </div>
 
-<div class="prayer-row">
-<span>ASAR</span>
-<span id="asr">--:--</span>
-</div>
+            <div class="prayer-row">
+                <span>ZOHOR</span>
+                <span id="dhuhr">--:--</span>
+            </div>
 
-<div class="prayer-row">
-<span>MAGHRIB</span>
-<span id="maghrib">--:--</span>
-</div>
+            <div class="prayer-row">
+                <span>ASAR</span>
+                <span id="asr">--:--</span>
+            </div>
 
-<div class="prayer-row">
-<span>ISYAK</span>
-<span id="isha">--:--</span>
-</div>
+            <div class="prayer-row">
+                <span>MAGHRIB</span>
+                <span id="maghrib">--:--</span>
+            </div>
 
-</div>
+            <div class="prayer-row">
+                <span>ISYAK</span>
+                <span id="isha">--:--</span>
+            </div>
+        </div>
 
+        <div class="button-group">
+            <button class="notify-btn" onclick="enableNotification()">
+                🔔 NOTIFICATION ON
+            </button>
 
-<!-- =========================
-BUTTONS
-========================= -->
+            <button class="test-btn" onclick="testNotification()">
+                🚨 TEST ALERT
+            </button>
 
-<div class="button-group">
-
-
-<button
-class="notify-btn"
-onclick="enableNotification()"
+         <button 
+    id="mute-btn"
+    class="mute-btn" 
+    onclick="toggleMute()"
 >
-
-🔔 NOTIFICATION ON
-
+    🔊 SOUND ON
 </button>
 
-
-<button
-class="test-btn"
-onclick="testNotification()"
->
-
-🚨 TEST ALERT
-
-</button>
-
-
-<button
-class="mute-btn"
-onclick="muteAzan()"
->
-
-🔇 MUTE AZAN
-
-</button>
-
-</div>
-
-
-<!-- =========================
-ISLAMIC EVENT
-========================= -->
-
-<div class="islamic-events">
+     <div class="islamic-events">
 
 <h2>
 📅 ISLAMIC EVENT COUNTDOWN
 </h2>
 
-<div
-class="event-item"
-id="ramadhan-countdown"
->
-Loading...
-</div>
+<div class="event-item" id="ramadhan-countdown"></div>
 
-<div
-class="event-item"
-id="aidilfitri-countdown"
->
-Loading...
-</div>
+<div class="event-item" id="aidilfitri-countdown"></div>
 
-<div
-class="event-item"
-id="aidiladha-countdown"
->
-Loading...
-</div>
+<div class="event-item" id="aidiladha-countdown"></div>
 
 </div>
 
+        <div class="footer">
+            🇵🇸 FREE PALESTINE • MY SOLAT
+        </div>
 
-<!-- =========================
-FOOTER
-========================= -->
+    </div>
 
-<div class="footer">
+    <script src="script.js"></script>
 
-🇵🇸 FREE PALESTINE • MY SOLAT
-
-</div>
-
-</div>
-
-
-<!-- =========================
-SCRIPT
-========================= -->
-
-<script src="script.js"></script>
+    <script>
+        // Fungsi khas bila butang MUTE AZAN diklik
+        function muteAzan() {
+            const azanAudio = document.getElementById('azan-audio');
+            const muteBtn = document.querySelector('.mute-btn');
+            
+            if (azanAudio) {
+                // Paksa audio berhenti & reset semula masa ke saat 0 balik
+                azanAudio.pause();
+                azanAudio.currentTime = 0;
+                
+                // Efek maklum balas pada butang semasa ditekan
+                if (muteBtn) {
+                    muteBtn.style.background = "linear-gradient(135deg, #555, #222)";
+                    muteBtn.innerText = "AZAN RESET!";
+                    
+                    // Pulangkan rupa butang asal selepas 1 saat
+                    setTimeout(function() {
+                        muteBtn.innerText = "🔇 MUTE AZAN";
+                        muteBtn.style.background = "linear-gradient(135deg, #ff1744, #d50000)";
+                    }, 1000);
+                }
+            }
+        }
+    </script>
 
 </body>
-
 </html>
