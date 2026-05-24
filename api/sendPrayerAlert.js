@@ -49,14 +49,14 @@ export default async function handler(req, res) {
 
                     // SEMAKAN A: Ngam-ngam masuk waktu solat sebenar
                     if (jumlahMinitSemasa === jumlahMinitSolat) {
-                        mesejPush = `🕌 Waktu Solat ${namaSolat} telah masuk bagi kawasan zon ${zone.toUpperCase()} dan sekitarnya.`;
+                        mesejPush = `🕌 Telah Masuk Waktu Solat ${namaSolat} bagi Kawasan Anda. Mari tunaikan solat.`;
                         jenisAlert = namaSolat;
                         break;
                     }
 
                     // SEMAKAN B: Ngam-ngam 10 minit sebelum masuk waktu solat
                     if (jumlahMinitSolat - jumlahMinitSemasa === 10) {
-                        mesejPush = `🕌 Lagi 10 minit sebelum masuk waktu ${namaSolat} bagi kawasan zon ${zone.toUpperCase()}.`;
+                        mesejPush = `🕌 10 minit Lagi Akan masuk waktu ${namaSolat} bagi kawasan zon ${zone.toUpperCase()}.`;
                         jenisAlert = `${namaSolat}-10Min`;
                         break;
                     }
