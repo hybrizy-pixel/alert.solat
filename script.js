@@ -1,18 +1,28 @@
 // =========================
 // ONESIGNAL INIT
 // =========================
-window.OneSignalDeferred = window.OneSignalDeferred || [];
-OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-        appId: "399a4625-3fc2-47fd-b4a7-5e50c5542f53",
-        safari_web_id: "web.onesignal.auto.REPLACE_THIS",
-        notifyButton: {
-            enable: false
-        }
-    });
-    console.log("✅ OneSignal Ready");
-});
 
+window.OneSignalDeferred =
+window.OneSignalDeferred || [];
+
+OneSignalDeferred.push(async function(OneSignal) {
+
+    await OneSignal.init({
+
+        appId:
+        "399a4625-3fc2-47fd-b4a7-5e50c5542f53",
+
+        notifyButton:{
+            enable:false
+        }
+
+    });
+
+    
+
+    console.log("✅ OneSignal Ready");
+
+});
 // =========================
 // GLOBAL VARIABLES
 // =========================
@@ -386,34 +396,38 @@ function playAzan(prayerName) {
 // =========================
 // ENABLE NOTIFICATION
 // =========================
-async function enableNotification() {
 
-    try {
+function enableNotification(){
 
-        // CLEAR CACHE LOCAL
-        localStorage.removeItem("onesignal-notification-prompt");
+    OneSignalDeferred.push(async function(OneSignal){
 
-        // FORCE OPT IN
-        await OneSignal.User.PushSubscription.optIn();
+        try{
 
-        // REQUEST PERMISSION
-        const permission =
-        await OneSignal.Notifications.requestPermission();
+            // REQUEST PERMISSION
+            await OneSignal.Notifications.requestPermission();
 
-        console.log("Permission:", permission);
+            // CHECK SUBSCRIBE
+            const isSubscribed =
+            OneSignal.User.PushSubscription.optedIn;
 
-        setTimeout(async () => {
+            console.log(
+                "Subscribed:",
+                isSubscribed
+            );
 
-            const subscriptionId =
-            await OneSignal.User.PushSubscription.getIdAsync();
+            if(isSubscribed){
 
-            if(subscriptionId){
+                const subscriptionId =
+                await OneSignal.User
+                .PushSubscription
+                .getIdAsync();
 
-                notificationEnabled = true;
+                console.log(
+                    "✅ Subscription ID:",
+                    subscriptionId
+                );
 
-                console.log("✅ SUBSCRIBED:", subscriptionId);
-
-                alert(`✅ CONNECTED`);
+                alert("✅ Notification Enabled");
 
             }else{
 
@@ -421,15 +435,15 @@ async function enableNotification() {
 
             }
 
-        },3000);
+        }catch(error){
 
-    } catch(error){
+            console.log(error);
 
-        console.log(error);
+            alert(error.message);
 
-        alert(`ERROR: ${error.message}`);
+        }
 
-    }
+    });
 
 }
 // =========================
