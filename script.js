@@ -1,18 +1,35 @@
 // =========================
-// ONESIGNAL INIT
+// GANTI FUNGSI INI DALAM script.js
 // =========================
-window.OneSignalDeferred = window.OneSignalDeferred || [];
-OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-        appId: "399a4625-3fc2-47fd-b4a7-5e50c5542f53",
-        safari_web_id: "web.onesignal.auto.REPLACE_THIS",
-        notifyButton: {
-            enable: false
+function enableNotification() {
+    console.log("🚀 Mula proses subscribe...");
+
+    // Gunakan OneSignalDeferred supaya ia menunggu SDK sedia
+    window.OneSignalDeferred.push(async function(OneSignal) {
+        try {
+            // Gunakan requestPermission() dari OneSignal SDK, BUKAN dari Notification API native
+            // { force: true } memaksa Safari untuk memaparkan prompt
+            const permission = await OneSignal.Notifications.requestPermission({ force: true });
+            
+            console.log("Permission status:", permission);
+
+            if (permission) {
+                // Selepas dapat kebenaran, baru kita tarik Subscription ID
+                const subscriptionId = OneSignal.User.PushSubscription.id;
+                console.log("✅ Subscription ID:", subscriptionId);
+                
+                // Hantar tag zon lokasi
+                OneSignal.User.addTag("user_zone", currentZone);
+                alert("✅ Notifikasi telah diaktifkan!");
+            } else {
+                alert("❌ Kebenaran ditolak. Sila check Settings > Safari > Notifications.");
+            }
+        } catch (error) {
+            console.error("❌ Error:", error);
+            alert("Ralat: " + error.message);
         }
     });
-    console.log("✅ OneSignal Ready");
-});
-
+}
 // =========================
 // GLOBAL VARIABLES
 // =========================
@@ -369,9 +386,11 @@ function playAzan(prayerName) {
         audioFile = "azan-subuh.mp3";
     }
 
-    if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
+   if (currentAudio) {
+
+    currentAudio.pause();
+
+    currentAudio.currentTime = 0;
     }
 
     currentAudio = new Audio(audioFile);
@@ -384,23 +403,54 @@ function playAzan(prayerName) {
 // =========================
 // ENABLE NOTIFICATION
 // =========================
+
 async function enableNotification() {
-    try {
-        await OneSignal.Notifications.requestPermission();
-        setTimeout(async () => {
-            const subscriptionId = await OneSignal.User.PushSubscription.getIdAsync();
-            if (subscriptionId) {
-                notificationEnabled = true;
-                console.log("SUBSCRIPTION ID:", subscriptionId);
-                alert(`✅ CONNECTED\n\n${subscriptionId}`);
+
+    console.log("🚀 BUTTON CLICK");
+
+    window.OneSignalDeferred.push(async function(OneSignal) {
+
+        try {
+
+            console.log("✅ OneSignal Loaded");
+
+            // REQUEST PERMISSION DARI ONESIGNAL
+            await OneSignal.Notifications.requestPermission();
+
+            // CHECK STATUS
+            const optedIn =
+                OneSignal.User.PushSubscription.optedIn;
+
+            console.log("OPTED:", optedIn);
+
+            if (optedIn) {
+
+                const subscriptionId =
+                    OneSignal.User.PushSubscription.id;
+
+                console.log(
+                    "✅ Subscription ID:",
+                    subscriptionId
+                );
+
+                alert("✅ Notification Enabled");
+
             } else {
-                alert("❌ Subscription Failed");
+
+                alert("❌ User Cancel Permission");
+
             }
-        }, 3000);
-    } catch (error) {
-        console.log(error);
-        alert(`ERROR: ${error.message}`);
-    }
+
+        } catch(error) {
+
+            console.log(error);
+
+            alert(error.message);
+
+        }
+
+    });
+
 }
 // =========================
 // TOGGLE MUTE
