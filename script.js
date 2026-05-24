@@ -415,17 +415,15 @@ function enableNotification(){
                 isSubscribed
             );
 
-            if(isSubscribed){
+           if(isSubscribed){
 
-                const subscriptionId =
-                await OneSignal.User
-                .PushSubscription
-                .getIdAsync();
+    const subscriptionId =
+    OneSignal.User.PushSubscription.id;
 
-                console.log(
-                    "✅ Subscription ID:",
-                    subscriptionId
-                );
+    console.log(
+        "✅ Subscription ID:",
+        subscriptionId
+    );
 
                 alert("✅ Notification Enabled");
 
