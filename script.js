@@ -369,9 +369,11 @@ function playAzan(prayerName) {
         audioFile = "azan-subuh.mp3";
     }
 
-    if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
+   if (currentAudio) {
+
+    currentAudio.pause();
+
+    currentAudio.currentTime = 0;
     }
 
     currentAudio = new Audio(audioFile);
@@ -385,22 +387,50 @@ function playAzan(prayerName) {
 // ENABLE NOTIFICATION
 // =========================
 async function enableNotification() {
+
     try {
+
+        // CLEAR CACHE LOCAL
+        localStorage.removeItem("onesignal-notification-prompt");
+
+        // FORCE OPT IN
+        await OneSignal.User.PushSubscription.optIn();
+
+        // REQUEST PERMISSION
+        const permission =
         await OneSignal.Notifications.requestPermission();
+
+        console.log("Permission:", permission);
+
         setTimeout(async () => {
-            const subscriptionId = await OneSignal.User.PushSubscription.getIdAsync();
-            if (subscriptionId) {
+
+            const subscriptionId =
+            await OneSignal.User.PushSubscription.getIdAsync();
+
+            if(subscriptionId){
+
                 notificationEnabled = true;
-                console.log("SUBSCRIPTION ID:", subscriptionId);
-                alert(`✅ CONNECTED\n\n${subscriptionId}`);
-            } else {
+
+                console.log("✅ SUBSCRIBED:", subscriptionId);
+
+                alert(`✅ CONNECTED`);
+
+            }else{
+
                 alert("❌ Subscription Failed");
+
             }
-        }, 3000);
-    } catch (error) {
+
+        },3000);
+
+    } catch(error){
+
         console.log(error);
+
         alert(`ERROR: ${error.message}`);
+
     }
+
 }
 // =========================
 // TOGGLE MUTE
