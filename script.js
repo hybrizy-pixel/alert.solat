@@ -399,17 +399,18 @@ function playAzan(prayerName) {
 
 function enableNotification(){
 
-    OneSignalDeferred.push(async function(OneSignal){
+OneSignalDeferred.push(async function(OneSignal){
 
         try{
 
-            // REQUEST PERMISSION
-            await OneSignal.Notifications.requestPermission();
+            // FORCE NATIVE POPUP
+            const permission =
+            await Notification.requestPermission();
 
             // CHECK SUBSCRIBE
             const isSubscribed =
-            OneSignal.User.PushSubscription.optedIn;
-
+            permission === "granted";
+            
             console.log(
                 "Subscribed:",
                 isSubscribed
