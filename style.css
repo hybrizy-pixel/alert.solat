@@ -1,1480 +1,213 @@
-/* =========================
-GLOBAL
-========================= */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>MY SOLAT</title>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-}
+    <link rel="manifest" href="manifest.json"/>
+    <meta name="theme-color" content="#000000"/>
 
-body{
+    <link rel="apple-touch-icon" href="icon-192.png"/>
 
-background-image:
-url('mekah.jpg');
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 
-background-size:cover;
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
 
-background-position:center;
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700;800&display=swap" rel="stylesheet">
 
-background-repeat:no-repeat;
+    <link rel="stylesheet" href="style.css"/>
 
-background-attachment:fixed;
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  
+</head>
 
-min-height:100vh;
+<body>
 
-color:white;
+    <audio id="azan-audio" src="azan.mp3"></audio>
+<div id="dynamic-island" class="island-hidden">
+        <div class="island-content">
+            <div class="island-left">
+                <span class="island-icon">🇲🇾</span>
+                <div class="island-text">
+            </div>
+        </div>
+    </div>
+    <div class="app">
 
-overflow-x:hidden;
+        <div class="header">
+            <h1>🕌 MY SOLAT</h1>
+
+            <div class="dual-clock">
+                <div class="clock-box malaysia-clock">
+                    <div class="clock-label">🇲🇾 MALAYSIA</div>
+                    <div id="current-time">00:00:00</div>
+                </div>
+
+                <div class="clock-box mekah-clock">
+                    <div class="clock-label">🇸🇦 MEKAH</div>
+                    <div id="mekah-time">00:00:00</div>
+                </div>
+            </div>
 
-}
+            <div class="info-panel">
+
+<div class="info-row">
 
-/* =========================
-OVERLAY
-========================= */
+<div class="info-box" id="date">
+Loading...
+</div>
+
+<div class="info-box" id="hijri-date">
+Loading...
+</div>
 
-body::before{
+</div>
 
-content:"";
+<div class="info-box location-box" id="location">
+Loading...
+</div>
 
-position:fixed;
+ </div>
 
-top:0;
-left:0;
+        <div class="next-prayer-card">
+<h2 class="next-prayer-label">
+    WAKTU SOLAT SETERUSNYA
+</h2>
 
-width:100%;
-height:100%;
+            <div id="next-prayer">LOADING...</div>
 
-background:
-rgba(0,0,0,0.55);
+            <div class="countdown">
+                <div class="time-box">
+                    <span id="hours">00</span>
+                    <small>JAM</small>
+                </div>
 
-z-index:-1;
+                <div class="time-box">
+                    <span id="minutes">00</span>
+                    <small>MINIT</small>
+                </div>
 
-}
+                <div class="time-box">
+                    <span id="seconds">00</span>
+                    <small>SAAT</small>
+                </div>
+            </div>
+        </div>
 
-/* =========================
-APP
-========================= */
+    <div class="prayer-times">
 
-.app{
 
-padding:20px;
-
-max-width:500px;
-
-margin:auto;
-
-}
-
-/* =========================
-HEADER
-========================= */
-
-.header{
-
-text-align:center;
-
-margin-top:20px;
-
-margin-bottom:30px;
-
-}
-
-.header h1{
-
-font-size:36px;
-
-font-weight:700;
-
-margin-bottom:10px;
-
-letter-spacing:3px;
-
-text-shadow:
-0 0 10px #000000,
-0 0 20px #ff9800;
-
-}
-
-/* =========================
-DUAL CLOCK
-========================= */
-
-.dual-clock{
-
-display:flex;
-
-justify-content:center;
-
-gap:20px;
-
-flex-wrap:wrap;
-
-margin-top:20px;
-
-}
-
-.clock-box{
-
-position:relative;
-
-background:
-linear-gradient(
-145deg,
-rgba(255,255,255,0.08),
-rgba(255,255,255,0.03)
-);
-
-padding:16px;
-
-border-radius:22px;
-
-min-width:160px;
-
-overflow:hidden;
-
-backdrop-filter:blur(14px);
-
-border:
-1px solid rgba(255,255,255,0.08);
-
-box-shadow:
-0 8px 25px rgba(0,0,0,0.45),
-inset 0 1px 0 rgba(255,255,255,0.08),
-0 0 20px rgba(255,152,0,0.12);
-
-transition:0.4s ease;
-
-}
-
-.clock-box:hover{
-
-transform:
-translateY(-3px)
-scale(1.02);
-
-box-shadow:
-0 10px 30px rgba(0,0,0,0.55),
-0 0 25px rgba(255,152,0,0.25);
-
-}
-
-.clock-label{
-
-font-size:14px;
-
-font-weight:700;
-
-letter-spacing:2px;
-
-margin-bottom:10px;
-
-color:#ffffff;
-
-text-shadow:
-0 0 10px #ff9800;
-
-}
-
-/* =========================
-MALAYSIA CLOCK
-========================= */
-
-.malaysia-clock #current-time{
-
-font-family:'Orbitron',sans-serif;
-
-font-size:24px;
-
-font-weight:900;
-
-letter-spacing:2px;
-
-color:#00ff66;
-
-text-shadow:
-0 0 5px #000000,
-0 0 10px #00ff66,
-0 0 20px #00ff66,
-0 0 40px #00ff66;
-
-animation:
-greenGlow 1.5s infinite;
-
-}
-
-/* =========================
-MEKAH CLOCK
-========================= */
-
-.mekah-clock #mekah-time{
-
-font-family:'Orbitron',sans-serif;
-
-font-size:24px;
-
-font-weight:900;
-
-letter-spacing:2px;
-
-color:#ff9800;
-
-text-shadow:
-0 0 5px #000000,
-0 0 10px #ff9800,
-0 0 20px #ff6d00,
-0 0 40px #ff6d00;
-
-animation:
-orangeGlow 1.5s infinite;
-
-}
-
-#date,
-#hijri-date,
-#location{
-
-font-size:15px;
-
-opacity:0.95;
-
-margin-top:5px;
-
-}
-/* =========================
-INFO PANEL
-========================= */
-
-.info-panel{
-
-display:flex;
-
-flex-direction:column;
-
-align-items:center;
-
-gap:14px;
-
-margin-top:20px;
-
-margin-bottom:25px;
-
-}
-
-
-/* =========================
-DATE ROW
-========================= */
-
-.info-row{
-
-display:flex;
-
-justify-content:center;
-
-gap:12px;
-
-width:100%;
-
-flex-wrap:wrap;
-
-}
-
-
-/* =========================
-INFO BOX
-========================= */
-
-.info-box{
-
-position:relative;
-
-padding:14px 18px;
-
-min-width:180px;
-
-text-align:center;
-
-border-radius:20px;
-
-overflow:hidden;
-
-background:
-linear-gradient(
-145deg,
-rgba(25,25,25,0.88),
-rgba(10,10,10,0.92)
-);
-
-backdrop-filter:blur(14px);
-
-border:
-1px solid rgba(255,170,0,0.12);
-
-box-shadow:
-0 0 10px rgba(255,140,0,0.08),
-0 8px 25px rgba(0,0,0,0.45),
-inset 0 1px 0 rgba(255,255,255,0.04);
-
-font-family:'Audiowide',sans-serif;
-
-font-size:14px;
-
-font-weight:600;
-
-letter-spacing:1px;
-
-color:#ffffff;
-
-transition:0.3s ease;
-
-}
-
-
-/* =========================
-TOP GLOW
-========================= */
-
-.info-box::before{
-
-content:"";
-
-position:absolute;
-
-top:0;
-left:0;
-
-width:100%;
-height:2px;
-
-background:linear-gradient(
-90deg,
-transparent,
-#ff9800,
-#ffd54f,
-#ff9800,
-transparent
-);
-
-box-shadow:
-0 0 10px rgba(255,152,0,0.45);
-
-}
-
-
-/* =========================
-DATE TEXT
-========================= */
-
-#date{
-
-background:linear-gradient(
-90deg,
-#ffffff,
-#ffd54f,
-#ff9800
-);
-
-background-clip:text;
--webkit-background-clip:text;
-
-color:transparent;
--webkit-text-fill-color:transparent;
-
-}
-
-
-/* =========================
-HIJRI DATE
-========================= */
-
-#hijri-date{
-
-background:linear-gradient(
-90deg,
-#ffffff,
-#ffcc80,
-#ff9800
-);
-
-background-clip:text;
--webkit-background-clip:text;
-
-color:transparent;
--webkit-text-fill-color:transparent;
-
-}
-
-
-/* =========================
-LOCATION BOX
-========================= */
-
-.location-box{
-
-width:100%;
-
-max-width:380px;
-
-color:#ffcc80;
-
-font-size:15px;
-
-}
-/* =========================
-CARD
-========================= */
-
-/* =========================
-FUTURISTIC EVENT BOX
-========================= */
-
-.event-item{
-
-position:relative;
-
-margin-top:15px;
-
-display:flex;
-
-align-items:center;
-
-justify-content:space-between;
-
-font-family:'Orbitron',sans-serif;
-
-font-size:18px;
-
-font-weight:700;
-
-color:#ffffff;
-
-letter-spacing:1px;
-
-padding:22px;
-
-margin-top:18px;
-
-margin-bottom:20px;
-
-border-radius:28px;
-
-overflow:hidden;
-
-/* glass futuristic */
-background:
-linear-gradient(
-145deg,
-rgba(25,25,25,0.92),
-rgba(10,10,10,0.96)
-);
-
-backdrop-filter:blur(16px);
-
-border:
-1px solid rgba(255,170,0,0.12);
-
-/* premium shadow */
-box-shadow:
-0 0 10px rgba(255,140,0,0.08),
-0 10px 35px rgba(0,0,0,0.55),
-inset 0 1px 0 rgba(255,255,255,0.04);
-
-transition:0.35s ease;
-
-}
-
-
-/* =========================
-TOP GLOW LINE
-========================= */
-
-.event-item::before{
-
-content:"";
-
-position:absolute;
-
-top:0;
-left:0;
-
-width:100%;
-height:2px;
-
-background:linear-gradient(
-90deg,
-transparent,
-#ff9800,
-#ffd54f,
-#ff9800,
-transparent
-);
-
-opacity:0.9;
-
-box-shadow:
-0 0 10px #ff9800,
-0 0 20px rgba(255,152,0,0.4);
-
-}
-/* =========================
-PRAYER TITLE INSIDE CARD
-========================= */
-
-.prayer-title{
-
-position:relative;
-
-padding-top:10px;
-
-margin-top:25px;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-gap:14px;
-
-margin-bottom:18px;
-
-padding-bottom:16px;
-
-font-family:'Orbitron',sans-serif;
-
-font-size:24px;
-
-font-weight:800;
-
-letter-spacing:6px;
-
-text-transform:uppercase;
-
-color:#ffffff;
-
-text-shadow:
-0 0 8px rgba(255,152,0,0.18);
-
-}
-
-
-/* =========================
-LEFT & RIGHT LINE
-========================= */
-
-.prayer-title::before,
-.prayer-title::after{
-
-content:"";
-
-width:90px;
-
-height:2px;
-
-background:linear-gradient(
-90deg,
-transparent,
-#ff9800,
-#ffd54f
-);
-
-box-shadow:
-0 0 10px rgba(255,152,0,0.45);
-
-}
-
-
-/* RIGHT SIDE */
-
-.prayer-title::after{
-
-background:linear-gradient(
-90deg,
-#ffd54f,
-#ff9800,
-transparent
-);
-
-}
-/* =========================
-HOVER EFFECT
-========================= */
-
-.event-item:hover{
-
-transform:
-translateY(-4px)
-scale(1.01);
-
-border:
-1px solid rgba(255,170,0,0.25);
-
-box-shadow:
-0 0 20px rgba(255,170,0,0.12),
-0 15px 40px rgba(0,0,0,0.65);
-
-}
-
-
-/* =========================
-EVENT HOVER
-========================= */
-
-.event-item:hover{
-
-transform:
-translateY(-3px)
-scale(1.01);
-
-border:
-1px solid rgba(255,170,0,0.25);
-
-box-shadow:
-0 0 15px rgba(255,170,0,0.12),
-0 15px 35px rgba(0,0,0,0.55);
-
-}
-
-
-/* =========================
-PREMIUM DIVIDER
-========================= */
-
-.event-item::after{
-
-content:"";
-
-position:absolute;
-
-bottom:0;
-left:50%;
-
-transform:translateX(-50%);
-
-width:82%;
-
-height:1px;
-
-background:linear-gradient(
-90deg,
-transparent,
-rgba(255,170,0,0.15),
-rgba(255,213,79,0.8),
-rgba(255,170,0,0.15),
-transparent
-);
-
-}
-
-
-/* =========================
-EVENT ICON
-========================= */
-
-.event-icon{
-
-width:58px;
-height:58px;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-border-radius:18px;
-
-font-size:28px;
-
-background:
-linear-gradient(
-145deg,
-rgba(255,170,0,0.12),
-rgba(255,120,0,0.08)
-);
-
-border:
-1px solid rgba(255,170,0,0.15);
-
-backdrop-filter:blur(10px);
-
-box-shadow:
-0 0 10px rgba(255,170,0,0.08),
-inset 0 1px 0 rgba(255,255,255,0.04);
-
-}
-
-
-/* =========================
-EVENT TITLE
-========================= */
-
-.event-name{
-
-font-family:'Orbitron',sans-serif;
-
-font-size:20px;
-
-font-weight:800;
-
-letter-spacing:2px;
-
-color:#ffffff;
-
-text-transform:uppercase;
-
-}
-
-
-/* =========================
-EVENT SUBTITLE
-========================= */
-
-.event-sub{
-
-font-size:13px;
-
-margin-top:4px;
-
-letter-spacing:1px;
-
-color:rgba(255,255,255,0.45);
-
-}
-
-
-/* =========================
-COUNTDOWN NUMBER
-========================= */
-
-.event-days .number{
-
-font-family:'Orbitron',sans-serif;
-
-font-size:38px;
-
-font-weight:900;
-
-color:#ff9800;
-
-text-shadow:
-0 0 8px rgba(255,152,0,0.25);
-
-}
-
-/* =========================
-FUTURISTIC NEXT PRAYER TITLE
-========================= */
-
-/* =========================
-FUTURISTIC NEXT PRAYER TITLE
-BLACK ORANGE HUD
-========================= */
-
-.next-prayer-card .next-prayer-label{
-
-font-family:'Orbitron',sans-serif;
-
-margin-top:25px;
-
-font-size:20px;
-
-font-weight:700;
-
-letter-spacing:8px;
-
-text-transform:uppercase;
-
-text-align:center;
-
-margin-bottom:18px;
-
-position:relative;
-
-/* WARNA HITAM OREN */
-color:#ff9800;
-
-background:none !important;
-
-background-clip:border-box;
--webkit-background-clip:border-box;
-
--webkit-text-fill-color:#ff9800;
-
-/* SHADOW HITAM */
-text-shadow:
-2px 2px 0 #000000,
-0 0 2px rgba(0,0,0,0.8);
-
-filter:none;
-
-animation:none;
-
-}
-
-
-/* =========================
-HUD LINES OREN
-========================= */
-
-.next-prayer-card .next-prayer-label::before,
-.next-prayer-card .next-prayer-label::after{
-
-content:"";
-
-position:absolute;
-
-top:50%;
-
-width:60px;
-
-height:2px;
-
-background:#ff9800;
-
-opacity:0.9;
-
-}
-
-.next-prayer-card .next-prayer-label::before{
-
-left:-10px;
-
-}
-
-.next-prayer-card .next-prayer-label::after{
-
-right:-10px;
-
-}
-
-/* =========================
-NEXT PRAYER
-SUPERCHARGE STYLE
-========================= */
-
-#next-prayer{
-
-font-family:'Audiowide',sans-serif;
-
-font-size:50px;
-
-font-weight:900;
-
-font-style:italic;
-
-margin-bottom:20px;
-
-text-transform:uppercase !important;
-
-letter-spacing:4px;
-
-text-align:center;
-
-position:relative;
-
-/* metallic futuristic */
-background:linear-gradient(
-90deg,
-#ffffff 0%,
-#7df9ff 20%,
-#00ffff 45%,
-#00e5ff 70%,
-#ffffff 100%
-);
-background-clip:text;
--webkit-background-clip:text;
-
-color:transparent;
--webkit-text-fill-color:transparent;
-
-/* outline putih */
--webkit-text-stroke:1px rgba(255,255,255,0.85);
-
-/* futuristic effect */
-transform:
-skewX(-10deg)
-perspective(500px)
-rotateX(6deg);
-
-/* cinematic glow */
-text-shadow:
-0 0 5px rgba(255,255,255,0.9),
-0 0 10px rgba(125,249,255,1),
-0 0 20px rgba(0,255,255,1),
-0 0 40px rgba(0,229,255,0.9),
-0 0 60px rgba(255,255,255,0.7);
-
-animation:
-futureGlow 2s infinite ease-in-out;
-
-}
-
-/* =========================
-COUNTDOWN
-========================= */
-
-.countdown{
-
-display:flex;
-
-justify-content:center;
-
-gap:15px;
-
-}
-
-.time-box{
-
-position:relative;
-
-background:linear-gradient(
-180deg,
-#2b2b2b 0%,
-#111111 50%,
-#050505 100%
-);
-
-padding:14px;
-
-border-radius:16px;
-
-width:85px;
-
-height:95px;
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-align-items:center;
-
-overflow:hidden;
-
-border:1px solid rgba(255,255,255,0.08);
-
-box-shadow:
-0 8px 20px rgba(0,0,0,0.6),
-inset 0 1px 0 rgba(255,255,255,0.08),
-0 0 15px rgba(255,152,0,0.15);
-
-}
-
-.time-box span{
-
-position:relative;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-width:100%;
-
-height:55px;
-
-font-family:'Orbitron',sans-serif;
-
-font-size:34px;
-
-font-weight:900;
-
-color:#ff9800;
-
-background:linear-gradient(
-180deg,
-#3a3a3a 0%,
-#1a1a1a 100%
-);
-
-border-radius:10px;
-
-border-top:1px solid rgba(255,255,255,0.08);
-
-border-bottom:2px solid rgba(0,0,0,0.7);
-
-box-shadow:
-inset 0 1px 2px rgba(255,255,255,0.08),
-inset 0 -2px 5px rgba(0,0,0,0.6),
-0 0 10px rgba(255,152,0,0.3);
-
-text-shadow:
-0 0 5px #000,
-0 0 10px #ff9800,
-0 0 25px #ff6d00;
-
-animation:
-flipGlow 2s infinite ease-in-out;
-
-}
-
-.time-box small{
-
-font-size:12px;
-
-letter-spacing:1px;
-
-color:rgba(255,255,255,0.7);
-
-margin-top:8px;
-
-}
-
-/* =========================
-FUTURISTIC PRAYER ROW
-========================= */
-
-.prayer-row{
-
-position:relative;
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-padding:18px 20px;
-
-margin-bottom:16px;
-
-border-radius:22px;
-
-overflow:hidden;
-
-/* glass effect */
-background:
-linear-gradient(
-145deg,
-rgba(30,30,30,0.92),
-rgba(10,10,10,0.96)
-);
-
-backdrop-filter:blur(14px);
-
-border:
-1px solid rgba(255,170,0,0.12);
-
-box-shadow:
-0 0 10px rgba(255,140,0,0.06),
-0 8px 25px rgba(0,0,0,0.45),
-inset 0 1px 0 rgba(255,255,255,0.04);
-
-transition:0.35s ease;
-
-}
-
-
-/* =========================
-TOP GLOW
-========================= */
-
-.prayer-row::before{
-
-content:"";
-
-position:absolute;
-
-top:0;
-left:0;
-
-width:100%;
-height:2px;
-
-background:linear-gradient(
-90deg,
-transparent,
-#ff9800,
-#ffd54f,
-#ff9800,
-transparent
-);
-
-opacity:0.9;
-
-box-shadow:
-0 0 10px rgba(255,152,0,0.45);
-
-}
-
-
-/* =========================
-HOVER
-========================= */
-
-.prayer-row:hover{
-
-transform:
-translateY(-3px)
-scale(1.01);
-
-border:
-1px solid rgba(255,170,0,0.22);
-
-box-shadow:
-0 0 18px rgba(255,170,0,0.12),
-0 15px 35px rgba(0,0,0,0.55);
-
-}
-
-/* =========================
-PRAYER NAME
-========================= */
-
-.prayer-row span:first-child{
-
-font-family:'Rajdhani',sans-serif;
-
-font-size:18px;
-
-font-weight:700;
-
-letter-spacing:2px;
-
-color:#ffffff;
-
-text-transform:uppercase;
-
-}
-
-/* =========================
-PRAYER TIME FONT
-========================= */
-
-.prayer-row span:last-child{
-
-font-family:'Oxanium',sans-serif !important;
-
-font-size:22px;
-
-font-weight:800;
-
-letter-spacing:2px;
-
-color:#ff9800;
-
-text-shadow:
-0 0 5px rgba(255,152,0,0.25),
-0 0 10px rgba(255,152,0,0.2);
-
-}
-
-/* =========================
-ACTIVE PRAYER
-========================= */
-
-.active-prayer{
-
-border:
-1px solid rgba(255,0,0,0.45) !important;
-
-background:
-linear-gradient(
-145deg,
-rgba(60,0,0,0.92),
-rgba(25,0,0,0.96)
-);
-
-box-shadow:
-0 0 20px rgba(255,0,0,0.18),
-0 0 40px rgba(255,0,0,0.12);
-
-animation:
-activeGlow 2s infinite ease-in-out;
-
-}
-
-/* =========================
-BUTTON GROUP
-========================= */
-
-.button-group{
-
-display:flex;
-
-flex-direction:column;
-
-gap:15px;
-
-margin-bottom:25px;
-
-}
-
-button{
-
-border:none;
-
-padding:16px;
-
-border-radius:20px;
-
-font-size:16px;
-
-font-weight:700;
-
-cursor:pointer;
-
-transition:0.3s;
-
-color:white;
-
-letter-spacing:1px;
-
-}
-
-button:hover{
-
-transform:scale(1.03);
-
-}
-
-/* =========================
-BUTTON COLORS
-========================= */
-
-.notify-btn{
-
-background:
-linear-gradient(
-135deg,
-#00c853,
-#009624
-);
-
-}
-
-.test-btn{
-
-background:
-linear-gradient(
-135deg,
-#ff9800,
-#ef6c00
-);
-
-}
-
-.mute-btn{
-
-background:
-linear-gradient(
-135deg,
-#ff1744,
-#d50000
-);
-
-}
-
-/* =========================
-ANIMATIONS
-========================= */
-
-@keyframes greenGlow{
-
-0%{
-
-text-shadow:
-0 0 5px #000000,
-0 0 10px #00ff66,
-0 0 20px #00ff66;
-
-}
-
-50%{
-
-text-shadow:
-0 0 10px #000000,
-0 0 20px #00ff66,
-0 0 40px #00ff66;
-
-}
-
-100%{
-
-text-shadow:
-0 0 5px #000000,
-0 0 10px #00ff66,
-0 0 20px #00ff66;
-
-}
-
-}
-
-@keyframes orangeGlow{
-
-0%{
-
-text-shadow:
-0 0 5px #000000,
-0 0 10px #ff9800,
-0 0 20px #ff6d00;
-
-}
-
-50%{
-
-text-shadow:
-0 0 10px #000000,
-0 0 20px #ff9800,
-0 0 40px #ff6d00;
-
-}
-
-100%{
-
-text-shadow:
-0 0 5px #000000,
-0 0 10px #ff9800,
-0 0 20px #ff6d00;
-
-}
-
-}
-
-@keyframes cyberPulse{
-
-0%{
-opacity:0.7;
-transform:scale(1);
-}
-
-50%{
-opacity:1;
-transform:scale(1.05);
-}
-
-100%{
-opacity:0.7;
-transform:scale(1);
-}
-
-}
-
-@keyframes futureGlow{
-
-0%{
-
-transform:
-skewX(-10deg)
-perspective(500px)
-rotateX(6deg)
-scale(1);
-
-}
-
-50%{
-
-transform:
-skewX(-10deg)
-perspective(500px)
-rotateX(6deg)
-scale(1.05);
-
-}
-
-100%{
-
-transform:
-skewX(-10deg)
-perspective(500px)
-rotateX(6deg)
-scale(1);
-
-}
-
-}
-
-@keyframes flipGlow{
-
-0%{
-
-text-shadow:
-0 0 5px #000,
-0 0 10px #ff9800;
-
-}
-
-50%{
-
-text-shadow:
-0 0 10px #000,
-0 0 20px #ff9800,
-0 0 40px #ff6d00;
-
-}
-
-100%{
-
-text-shadow:
-0 0 5px #000,
-0 0 10px #ff9800;
-
-}
-
-}
-
-@keyframes activeGlow{
-
-0%{
-background:rgba(255,0,0,0.12);
-box-shadow:
-0 0 15px rgba(255,0,0,0.4),
-0 0 30px rgba(255,0,0,0.6);
-}
-
-50%{
-background:rgba(255,0,0,0.4);
-box-shadow:
-0 0 25px rgba(255,0,0,0.8),
-0 0 50px rgba(255,0,0,0.9);
-}
-
-100%{
-background:rgba(255,0,0,0.12);
-box-shadow:
-0 0 15px rgba(255,0,0,0.4),
-0 0 30px rgba(255,0,0,0.6);
-}
-
-}
-
-/* =========================
-MOBILE
-========================= */
-
-@media(max-width:600px){
-
-#next-prayer{
-
-font-size:34px;
-
-}
-
-.time-box{
-
-width:70px;
-
-height:85px;
-
-}
-
-.time-box span{
-
-font-size:28px;
-
-}
-
-.next-prayer-label{
-
-font-size:20;
-
-letter-spacing:3px;
-
-}
-
-}
+<div class="prayer-title">
+    🕌 WAKTU SOLAT
+</div>
+
+            <div class="prayer-row">
+                <span>IMSAK</span>
+                <span id="imsak">--:--</span>
+            </div>
+
+            <div class="prayer-row">
+                <span>SUBUH</span>
+                <span id="fajr">--:--</span>
+            </div>
+
+            <div class="prayer-row">
+                <span>SYURUK</span>
+                <span id="syuruk">--:--</span>
+            </div>
+
+            <div class="prayer-row">
+                <span>ZOHOR</span>
+                <span id="dhuhr">--:--</span>
+            </div>
+
+            <div class="prayer-row">
+                <span>ASAR</span>
+                <span id="asr">--:--</span>
+            </div>
+
+            <div class="prayer-row">
+                <span>MAGHRIB</span>
+                <span id="maghrib">--:--</span>
+            </div>
+
+            <div class="prayer-row">
+                <span>ISYAK</span>
+                <span id="isha">--:--</span>
+            </div>
+        </div>
+
+       <div class="button-group">
+
+    <button class="cyber-btn green" onclick="enableNotification()">
+        🔔 NOTIFICATION ON
+    </button>
+
+    <button class="cyber-btn red" onclick="enableNotification()">
+        🔔 AKTIFKAN NOTIFIKASI AZAN
+    </button>
+
+    <button class="cyber-btn orange" onclick="testNotification()">
+        🚨 TEST ALERT
+    </button>
+
+    <button 
+        id="mute-btn"
+        class="cyber-btn pink"
+        onclick="toggleMute()">
+        🔊 SOUND ON
+    </button>
+
+</div>
+
+     <div class="islamic-events">
+
+<h2>
+📅 ISLAMIC EVENT COUNTDOWN
+</h2>
+
+<div class="event-item" id="ramadhan-countdown"></div>
+
+<div class="event-item" id="aidilfitri-countdown"></div>
+
+<div class="event-item" id="aidiladha-countdown"></div>
+
+</div>
+
+        <div class="footer">
+            🇵🇸 FREE PALESTINE • MY SOLAT
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+        // Fungsi khas bila butang MUTE AZAN diklik
+        function muteAzan() {
+            const azanAudio = document.getElementById('azan-audio');
+            const muteBtn = document.querySelector('.mute-btn');
+            
+            if (azanAudio) {
+                // Paksa audio berhenti & reset semula masa ke saat 0 balik
+                azanAudio.pause();
+                azanAudio.currentTime = 0;
+                
+                // Efek maklum balas pada butang semasa ditekan
+                if (muteBtn) {
+                    muteBtn.style.background = "linear-gradient(135deg, #555, #222)";
+                    muteBtn.innerText = "AZAN RESET!";
+                    
+                    // Pulangkan rupa butang asal selepas 1 saat
+                    setTimeout(function() {
+                        muteBtn.innerText = "🔇 MUTE AZAN";
+                        muteBtn.style.background = "linear-gradient(135deg, #ff1744, #d50000)";
+                    }, 1000);
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
