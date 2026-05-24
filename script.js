@@ -1,28 +1,35 @@
 // =========================
-// ONESIGNAL INIT
+// GANTI FUNGSI INI DALAM script.js
 // =========================
+function enableNotification() {
+    console.log("🚀 Mula proses subscribe...");
 
-window.OneSignalDeferred =
-window.OneSignalDeferred || [];
+    // Gunakan OneSignalDeferred supaya ia menunggu SDK sedia
+    window.OneSignalDeferred.push(async function(OneSignal) {
+        try {
+            // Gunakan requestPermission() dari OneSignal SDK, BUKAN dari Notification API native
+            // { force: true } memaksa Safari untuk memaparkan prompt
+            const permission = await OneSignal.Notifications.requestPermission({ force: true });
+            
+            console.log("Permission status:", permission);
 
-OneSignalDeferred.push(async function(OneSignal) {
-
-    await OneSignal.init({
-
-        appId:
-        "399a4625-3fc2-47fd-b4a7-5e50c5542f53",
-
-        notifyButton:{
-            enable:false
+            if (permission) {
+                // Selepas dapat kebenaran, baru kita tarik Subscription ID
+                const subscriptionId = OneSignal.User.PushSubscription.id;
+                console.log("✅ Subscription ID:", subscriptionId);
+                
+                // Hantar tag zon lokasi
+                OneSignal.User.addTag("user_zone", currentZone);
+                alert("✅ Notifikasi telah diaktifkan!");
+            } else {
+                alert("❌ Kebenaran ditolak. Sila check Settings > Safari > Notifications.");
+            }
+        } catch (error) {
+            console.error("❌ Error:", error);
+            alert("Ralat: " + error.message);
         }
-
     });
-
-    
-
-    console.log("✅ OneSignal Ready");
-
-});
+}
 // =========================
 // GLOBAL VARIABLES
 // =========================
