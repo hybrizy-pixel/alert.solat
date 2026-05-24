@@ -404,44 +404,44 @@ function playAzan(prayerName) {
 // ENABLE NOTIFICATION
 // =========================
 
-function enableNotification(){
+async function enableNotification() {
 
-OneSignalDeferred.push(async function(OneSignal){
+    console.log("🚀 BUTTON CLICK");
 
-        try{
+    window.OneSignalDeferred.push(async function(OneSignal) {
 
-            // FORCE NATIVE POPUP
-            const permission =
-            await Notification.requestPermission();
+        try {
 
-            // CHECK SUBSCRIBE
-            const isSubscribed =
-            permission === "granted";
-            
-            console.log(
-                "Subscribed:",
-                isSubscribed
-            );
+            console.log("✅ OneSignal Loaded");
 
-           if(isSubscribed){
+            // REQUEST PERMISSION DARI ONESIGNAL
+            await OneSignal.Notifications.requestPermission();
 
-    const subscriptionId =
-    OneSignal.User.PushSubscription.id;
+            // CHECK STATUS
+            const optedIn =
+                OneSignal.User.PushSubscription.optedIn;
 
-    console.log(
-        "✅ Subscription ID:",
-        subscriptionId
-    );
+            console.log("OPTED:", optedIn);
+
+            if (optedIn) {
+
+                const subscriptionId =
+                    OneSignal.User.PushSubscription.id;
+
+                console.log(
+                    "✅ Subscription ID:",
+                    subscriptionId
+                );
 
                 alert("✅ Notification Enabled");
 
-            }else{
+            } else {
 
-                alert("❌ Subscription Failed");
+                alert("❌ User Cancel Permission");
 
             }
 
-        }catch(error){
+        } catch(error) {
 
             console.log(error);
 
