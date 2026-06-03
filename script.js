@@ -54,74 +54,98 @@ document.addEventListener("click", () => {
 // ZONE MAP (SELURUH MALAYSIA)
 // =========================
 const zoneMap = {
-    // PERLIS
-    "perlis": "pls01", "arau": "pls01", "kangar": "pls01", "padang besar": "pls01",
-
-    // KEDAH
-    "kubang pasu": "kdh01", "jitra": "kdh01", "alor setar": "kdh01", "pokok sena": "kdh01",
-    "kuala muda": "kdh02", "sungai petani": "kdh02", "pendang": "kdh02", "yan": "kdh02",
-    "padang terap": "kdh03", "sik": "kdh03",
-    "baling": "kdh04",
-    "kulim": "kdh05", "bandar baharu": "kdh05",
-    "langkawi": "kdh06",
-
-    // PULAU PINANG
-    "pulau pinang": "png01", "penang": "png01", "george town": "png01", "seberang perai": "png01",
-
-    // PERAK
-    "grik": "prk01", "ulu perak": "prk01",
-    "ipoh": "prk02", "batu gajah": "prk02", "kampar": "prk02", "kuala kangsar": "prk02",
-    "manjung": "prk03", "lumut": "prk03", "sitiawan": "prk03",
-    "larut": "prk04", "matang": "prk04", "selama": "prk04", "taiping": "prk04",
-    "bagan datuk": "prk05", "teluk intan": "prk05", "hilir perak": "prk05",
-    "muallim": "prk06", "tanjung malim": "prk06",
-    "selama": "prk07",
-
-    // SELANGOR & WILAYAH
-    "kuala lumpur": "wly01", "putrajaya": "wly01",
-    "hulu selangor": "sgr01",
-    "gombak": "sgr02", "petaling": "sgr02", "shah alam": "sgr02", "subang jaya": "sgr02", "klang": "sgr02",
-    "kuala selangor": "sgr03",
-    "hulu langat": "sgr04", "kajang": "sgr04", "bangi": "sgr04", "ampang": "sgr04",
-    "sabak bernam": "sgr05",
-    "kuala langat": "sgr06",
-    "sepang": "sgr07", "cyberjaya": "sgr07",
-
-    // NEGERI SEMBILAN
-    "seremban": "ngr01", "port didson": "ngr01",
-    "jempol": "ngr02", "kuala pilah": "ngr02",
-
-    // MELAKA
-    "melaka": "mlk01", "alor gajah": "mlk01", "jasin": "mlk01",
 
     // JOHOR
-    "pulau aur": "jhr01", "pulau pemanggil": "jhr01",
-    "johor bahru": "jhr02", "kulai": "jhr02", "pontian": "jhr02",
-    "kluang": "jhr03", "batu pahat": "jhr03",
-    "muar": "jhr04", "ledang": "jhr04", "tangkak": "jhr04", "sega mat": "jhr04",
-    "mersing": "jhr05",
-    "kota tinggi": "jhr06",
+    "johor bahru":"jhr02",
+    "kota tinggi":"jhr02",
+    "mersing":"jhr02",
+    "kulai":"jhr02",
 
-    // PAHANG
-    "kuantan": "phg01", "pekan": "phg01",
-    "rompin": "phg02",
-    "bentong": "phg03", "raub": "phg03", "lipis": "phg03",
-    "jerantut": "phg04", "temerloh": "phg05", "maran": "phg05",
-    "cameron highlands": "phg06",
+    "kluang":"jhr03",
+    "pontian":"jhr03",
 
-    // TERENGGANU
-    "kuala terennganu": "trg01", "marang": "trg01",
-    "besut": "trg02", "setiu": "trg02",
-    "hulu terengganu": "trg03",
-    "kemaman": "trg04", "dungun": "trg04",
+    "batu pahat":"jhr04",
+    "muar":"jhr04",
+    "segamat":"jhr04",
+    "tangkak":"jhr04",
+    "gemas":"jhr04",
+
+    // KEDAH
+    "kota setar":"kdh01",
+    "kubang pasu":"kdh01",
+    "pokok sena":"kdh01",
+
+    "kuala muda":"kdh02",
+    "yan":"kdh02",
+    "pendang":"kdh02",
+
+    "padang terap":"kdh03",
+    "sik":"kdh03",
+
+    "baling":"kdh04",
+
+    "bandar baharu":"kdh05",
+    "kulim":"kdh05",
+
+    "langkawi":"kdh06",
 
     // KELANTAN
-    "kota bharu": "ktn01", "bachok": "ktn01", "pasir puteh": "ktn01",
-    "jeli": "ktn02", "kuala krai": "ktn02", "gua musang": "ktn02",
+    "bachok":"ktn01",
+    "kota bharu":"ktn01",
+    "machang":"ktn01",
+    "pasir mas":"ktn01",
+    "pasir puteh":"ktn01",
+    "tanah merah":"ktn01",
+    "tumpat":"ktn01",
+    "kuala krai":"ktn01",
 
-    // SABAH & SARAWAK
-    "sabah": "sbh01", "kota kinabalu": "sbh01",
-    "sarawak": "swk01", "kuching": "swk01"
+    "gua musang":"ktn02",
+    "jeli":"ktn02",
+
+    // MELAKA
+    "melaka":"mlk01",
+    "alor gajah":"mlk01",
+    "jasin":"mlk01",
+
+    // NEGERI SEMBILAN
+    "tampin":"ngs01",
+    "jempol":"ngs01",
+
+    "jelebu":"ngs02",
+    "kuala pilah":"ngs02",
+    "rembau":"ngs02",
+
+    "port dickson":"ngs03",
+    "seremban":"ngs03",
+
+    // SELANGOR
+    "gombak":"sgr01",
+    "petaling":"sgr01",
+    "sepang":"sgr01",
+    "hulu langat":"sgr01",
+    "hulu selangor":"sgr01",
+    "shah alam":"sgr01",
+
+    "kuala selangor":"sgr02",
+    "sabak bernam":"sgr02",
+
+    "klang":"sgr03",
+    "kuala langat":"sgr03",
+
+    // WILAYAH
+    "kuala lumpur":"wly01",
+    "putrajaya":"wly01",
+    "labuan":"wly02",
+
+    // PERLIS
+    "kangar":"pls01",
+    "arau":"pls01",
+    "padang besar":"pls01",
+
+    // PULAU PINANG
+    "penang":"png01",
+    "pulau pinang":"png01",
+    "george town":"png01"
 };
 
 // =========================
@@ -190,6 +214,9 @@ async function getLocation() {
                 const cityLower = city.toLowerCase().trim();
                 const stateLower = state.toLowerCase().trim();
                 const suburbLower = suburb.toLowerCase().trim();
+                console.log("CITY:", cityLower);
+                console.log("STATE:", stateLower);
+                console.log("SUBURB:", suburbLower);
 
                 if (cityLower === lastCity && cityLower !== "") return;
                 lastCity = cityLower;
@@ -203,7 +230,8 @@ async function getLocation() {
                 } else if (zoneMap[stateLower]) {
                     detectedZone = zoneMap[stateLower];
                 }
-
+                console.log("DETECTED ZONE:", detectedZone);
+                console.log("CURRENT ZONE:", currentZone);
                 if (detectedZone && detectedZone !== currentZone) {
                     currentZone = detectedZone;
                     console.log(`[LOKASI BARU] Sistem menukar zon solat ke: ${currentZone}`);
