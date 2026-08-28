@@ -934,8 +934,34 @@ async function reverseLocation(
 // DISPLAY LOCATION
 // =====================================================
 function displayLocation(
-    address
+    address,
+    lat,
+    lon
 ) {
+
+ const HQ_LAT = 5.397037222307945;
+    const HQ_LON = 100.39857514232843;
+    const HQ_RADIUS = 80;
+
+        const R = 6371000;
+
+    const dLat =
+        (HQ_LAT - lat) * Math.PI / 180;
+
+    const dLon =
+        (HQ_LON - lon) * Math.PI / 180;
+
+    const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(lat * Math.PI / 180) *
+        Math.cos(HQ_LAT * Math.PI / 180) *
+        Math.sin(dLon / 2) ** 2;
+
+    const distance =
+        R * 2 * Math.atan2(
+            Math.sqrt(a),
+            Math.sqrt(1 - a)
+        );
 
     const locationElement =
         document.getElementById(
@@ -947,8 +973,17 @@ function displayLocation(
         return;
     }
 
+if (
+    distance <= HQ_RADIUS
+) {
 
-    const place =
+    locationElement.innerHTML =
+        "📍 PRIME HQ • Seberang Jaya";
+
+    return;
+}
+
+    let place =
 
         address.city ||
 
@@ -976,6 +1011,32 @@ function displayLocation(
 
         "Malaysia";
 
+        const fullLocation =
+    normalizeLocation([
+        address.city,
+        address.town,
+        address.village,
+        address.hamlet,
+        address.municipality,
+        address.suburb,
+        address.neighbourhood,
+        address.city_district,
+        address.district,
+        address.county,
+        address.state_district
+    ]
+    .filter(Boolean)
+    .join(" "));
+
+    if (
+    fullLocation.includes(
+        "seberang jaya"
+    )
+) {
+
+    place =
+        "Seberang Jaya";
+}
 
     const state =
         address.state || "";
@@ -1087,8 +1148,10 @@ function getLocation() {
 
 
                             // Papar bandar / daerah
-                            displayLocation(
-                                address
+                        displayLocation(
+                               address,
+                               lat,
+                               lon
                             );
 
 
@@ -1299,8 +1362,10 @@ function watchLocationChanges() {
 
 
                     displayLocation(
-                        address
-                    );
+                       address,
+                       lat,
+                       lon
+                         );
 
 
                     const detectedZone =
